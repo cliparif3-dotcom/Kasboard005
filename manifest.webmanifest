@@ -1,0 +1,36 @@
+{
+ "name": "KasBoard MOODBOARD CK05",
+ "short_name": "KasBoard",
+ "description": "Aplikasi kas kelas MOODBOARD CK05: iuran, dana seminar, dan laporan keuangan.",
+ "lang": "id",
+ "start_url": "./index-firebase.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#108ee9",
+ "theme_color": "#108ee9",
+ "categories": [
+  "finance",
+  "productivity"
+ ],
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

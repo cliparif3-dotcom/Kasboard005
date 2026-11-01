@@ -100,7 +100,7 @@ input,select{width:100%;padding:11px;border:1px solid var(--ln);border-radius:10
 .eyb{border:0;background:none;color:var(--mu);cursor:pointer;padding:6px;display:grid}
 .wab{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#dcf8e6;color:#128c4a;flex:none;border:0;cursor:pointer;text-decoration:none}.wab.off{background:var(--ln);color:var(--mu)}
 textarea{width:100%;padding:11px;border:1px solid var(--ln);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit;min-height:230px;resize:vertical}
-</style></head><body>
+</style><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#108ee9"><meta name="mobile-web-app-capable" content="yes"></head><body>
 <div id="app"><div class="empty">Memuat KasBoard…</div></div>
 <dialog id="dlg"></dialog>
 <script>
@@ -305,4 +305,4 @@ try{
   db:{doc:p=>{const r=Fs.doc(fs,...p.split('/'));return{onSnapshot:(cb,er)=>Fs.onSnapshot(r,s=>cb(sn(s)),er),set:o=>Fs.setDoc(r,o),get:async()=>sn(await Fs.getDoc(r))}}}};
 }catch(e){console.warn('Firebase belum siap',e)}
 window.FBX=FBX;dispatchEvent(new Event('fbready'));
-</script></body></html>
+</script><script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))</script></body></html>
