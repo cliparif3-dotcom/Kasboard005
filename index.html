@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="data:," />
-    <title>KasBoard CK05 - Prototipe Revisi</title>
+    <title>KasBoard CK05</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#108ee9" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -70,7 +73,7 @@
         margin: 0 auto;
         padding: 16px 16px 108px;
       }
-      /* ---------- badge prototipe ---------- */
+      /* ---------- badge info ---------- */
       .proto-badge {
         display: flex;
         align-items: center;
@@ -524,51 +527,63 @@
         display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
         padding: 0; font-weight: 600; font-size: 14.5px; color: var(--red);
       }
+
+      /* ---------- elemen versi online ---------- */
+      .field select {
+        width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px;
+        background: var(--card); color: var(--ink); font: inherit; font-size: 14.5px;
+      }
+      .field textarea { font: inherit; }
+      .dialog { max-height: 92vh; overflow-y: auto; }
+      .dialog .field label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+      .dialog .field input, .dialog .field select {
+        width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px;
+        background: var(--card); color: var(--ink); font: inherit; font-size: 14.5px; box-sizing: border-box;
+      }
     </style>
   </head>
   <body>
     <!-- ================= LOGIN ================= -->
     <div id="loginView">
       <div class="app" style="padding-bottom:24px;">
-        <div class="proto-badge"><span class="dot"></span> Prototipe Revisi — bukan aplikasi asli</div>
-
         <div class="login-head">
           <div class="ic">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </div>
           <h1>KasBoard CK05</h1>
-          <p>Masuk khusus pengurus kelas 01IKOK005.<br />Hanya 3 pengurus yang punya kode akses.</p>
+          <p id="authSub">Masuk untuk mengelola keuangan kelas 01IKOK005.</p>
         </div>
 
         <form class="card" id="loginForm" novalidate>
-          <div class="login-error" id="loginError" role="alert">Nama atau kode akses salah. Aplikasi ini hanya untuk pengurus kelas.</div>
+          <div class="login-error" id="loginError" role="alert"></div>
           <div class="field">
             <label for="loginName">Nama</label>
-            <input type="text" id="loginName" autocomplete="username" placeholder="Nama pengurus" />
+            <input type="text" id="loginName" autocomplete="username" placeholder="Nama sesuai daftar kelas" />
+          </div>
+          <div class="field" id="nimField" hidden>
+            <label for="loginNim">NIM (untuk daftar / atur ulang kode)</label>
+            <input type="text" id="loginNim" inputmode="numeric" autocomplete="off" placeholder="NIM kamu" />
           </div>
           <div class="field">
             <label for="loginCode">Kode akses</label>
             <input type="password" id="loginCode" autocomplete="current-password" placeholder="Kode akses kamu" />
           </div>
-          <button type="submit" class="btn-primary">Masuk</button>
-          <p class="fineprint" style="text-align:center;">Nama tidak peka huruf besar/kecil — ketik saja nama kamu seperti biasa.</p>
+          <div class="field" id="code2Field" hidden>
+            <label for="loginCode2">Ulangi kode akses</label>
+            <input type="password" id="loginCode2" autocomplete="new-password" placeholder="Ulangi kode akses" />
+          </div>
+          <button type="submit" class="btn-primary" id="loginBtn">Masuk</button>
+          <p class="fineprint" style="text-align:center;" id="authSwitch">Belum punya akun? <a href="#" id="toRegister">Daftar sekarang</a> · <a href="#" id="toReset">Lupa kode akses?</a></p>
+          <p class="fineprint" style="text-align:center;" id="authBack" hidden><a href="#" id="toLogin">Kembali masuk</a></p>
         </form>
 
-        <div class="demo-box" aria-label="Kredensial demo prototipe">
-          <div class="demo-title">Akses pengurus prototipe — kode akses kelas 01IKOK005 (di aplikasi asli kode ini rahasia dan diganti berkala)</div>
-          <ul>
-            <li><span class="who"><b>Arif Hidayat</b><span>Ketua Kelas</span></span><code>01IKOK005</code></li>
-            <li><span class="who"><b>Rahmat Andika Saputra</b><span>Wakil Ketua Kelas</span></span><code>01IKOK005</code></li>
-            <li><span class="who"><b>Shayla Ramadani</b><span>Sekretaris</span></span><code>01IKOK005</code></li>
-          </ul>
-        </div>
+        <p class="fineprint" style="text-align:center;" id="authNote">Daftar memakai nama + NIM sesuai data kelas, lalu buat kode akses sendiri (min. 6 karakter). Masuk cukup nama + kode akses kamu.</p>
       </div>
     </div>
 
     <!-- ================= APLIKASI (setelah login) ================= -->
     <div id="appView" hidden>
     <div class="app">
-      <div class="proto-badge"><span class="dot"></span> Prototipe Revisi — bukan aplikasi asli</div>
 
       <!-- ================= BERANDA ================= -->
       <section class="page active" id="page-beranda">
@@ -654,7 +669,11 @@
       <!-- ================= AKTIVITAS ================= -->
       <section class="page" id="page-aktivitas">
         <h2 class="page-title">Aktivitas</h2>
-        <p class="page-sub">Semua transaksi Kas Kelas. Ketuk tanda × untuk menghapus — akan muncul konfirmasi dulu.</p>
+        <p class="page-sub" id="txSub">Transaksi dana yang sedang aktif. Ketuk tanda × untuk menghapus — akan muncul konfirmasi dulu.</p>
+        <div style="display:flex;gap:8px;margin:0 0 14px;" id="catatRow" hidden>
+          <button type="button" class="btn-primary" id="catatIn" style="flex:1;">+ Catat pemasukan</button>
+          <button type="button" class="btn-primary" id="catatOut" style="flex:1;background:var(--red);">− Catat pengeluaran</button>
+        </div>
 
         <div class="search-box">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -664,8 +683,6 @@
         <div class="filter-row">
           <select id="txMonth" aria-label="Filter bulan">
             <option value="all">Semua bulan</option>
-            <option value="2026-11">November 2026</option>
-            <option value="2026-10">Oktober 2026</option>
           </select>
           <div class="chip-group" id="txType" role="group" aria-label="Filter jenis transaksi">
             <button type="button" class="chip active" data-type="all">Semua</button>
@@ -760,10 +777,6 @@
           <p class="fineprint" id="exportNote">Berkas yang diunduh hanya berisi data Kas Kelas — tidak ada angka, nama, atau bagian Dana Seminar di dalamnya.</p>
         </div>
 
-        <div class="note-card">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-          <span><strong>Catatan revisi:</strong> tombol “Ganti kode akses” tidak lagi di halaman Laporan — pengaturan keamanan dipindah ke halaman <strong>Saya</strong>.</span>
-        </div>
       </section>
 
       <!-- ================= ANGGOTA ================= -->
@@ -771,27 +784,31 @@
         <h2 class="page-title">Anggota</h2>
         <p class="page-sub">36 anggota · Kelas 01IKOK005 — ketuk tombol WhatsApp hijau di tiap anggota untuk mengirim pengingat atau ucapan terima kasih. Pilihan yang muncul hanya yang sesuai status bayar anggota itu di tiap dana.</p>
         <div class="card">
-          <h2>Daftar anggota <span class="sub">Kas Kelas Rp10.000 · Dana Seminar Rp77.000</span></h2>
+          <h2>Daftar anggota <span class="sub" id="memberFundSub">Kas Kelas · Dana Seminar</span></h2>
           <ul class="member-list" id="memberList"></ul>
-          <p class="fineprint">Status pembayaran masih data contoh; nama anggota sudah data asli.</p>
+          <p class="fineprint">Status dihitung langsung dari data transaksi yang tersimpan di Firebase.</p>
         </div>
       </section>
 
       <!-- ================= SAYA ================= -->
       <section class="page" id="page-saya">
         <h2 class="page-title">Saya</h2>
-        <p class="page-sub" id="sayaSub">ARIF HIDAYAT · Ketua Kelas</p>
+        <p class="page-sub" id="sayaSub">—</p>
         <div class="card">
           <ul class="menu-list">
             <li>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              Ganti kode akses
-              <span class="chev">›</span>
+              <button type="button" class="menu-item" id="menuChpw">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Ganti kode akses saya
+                <span class="chev">›</span>
+              </button>
             </li>
-            <li>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 14 0v1"/></svg>
-              Profil saya
-              <span class="chev">›</span>
+            <li id="menuTplItem">
+              <button type="button" class="menu-item" id="menuTpl">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Template pesan WhatsApp
+                <span class="chev">›</span>
+              </button>
             </li>
             <li>
               <button type="button" class="menu-item" data-logout>
@@ -801,7 +818,7 @@
               </button>
             </li>
           </ul>
-          <p class="fineprint">Di revisi ini, “Ganti kode akses” tinggal di sini — bukan di halaman Laporan. Halaman Saya sendiri tidak difokuskan dalam prototipe ini.</p>
+          <p class="fineprint">Data tersimpan online di Firebase kasboard-ck05 dan tersinkron antar perangkat. Hanya akun Ketua Kelas (Arif Hidayat) yang bisa mencatat, mengubah, dan menghapus data.</p>
         </div>
       </section>
     </div>
@@ -857,7 +874,7 @@
         <div class="wa-options" id="waOptions" role="group" aria-label="Pilihan pesan WhatsApp"></div>
         <p class="wa-preview-label">Pratinjau pesan</p>
         <pre class="wa-preview" id="waPreview"></pre>
-        <p class="wa-note" id="waNote">Nomor WA anggota belum terhubung di prototipe; tautan membuka WhatsApp untuk memilih kontak.</p>
+        <p class="wa-note" id="waNote">Nomor WA anggota tersambung dari data kelas dan dokumen kontak/wa di Firebase.</p>
         <a class="btn-wa-open" id="waOpen" href="https://wa.me/?text=" target="_blank" rel="noopener">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413"/></svg>
           Buka WhatsApp
@@ -883,6 +900,66 @@
 
     <div class="toast" id="toast" role="status"></div>
 
+    <!-- ================= CATAT TRANSAKSI ================= -->
+    <div class="overlay" id="catatOverlay" role="dialog" aria-modal="true" aria-labelledby="catatTitle">
+      <div class="dialog">
+        <h3 id="catatTitle">Catat pemasukan</h3>
+        <form id="catatForm" novalidate>
+          <div class="field" id="catatMemberField">
+            <label for="catatMember">Dari anggota</label>
+            <select id="catatMember"></select>
+          </div>
+          <div class="field">
+            <label for="catatKat">Kategori</label>
+            <select id="catatKat"></select>
+          </div>
+          <div class="field">
+            <label for="catatAmount">Jumlah (Rp)</label>
+            <input type="number" id="catatAmount" inputmode="numeric" min="1" placeholder="10000" />
+          </div>
+          <div class="field">
+            <label for="catatDate">Tanggal</label>
+            <input type="date" id="catatDate" />
+          </div>
+          <div class="field">
+            <label for="catatNote">Catatan</label>
+            <input type="text" id="catatNote" placeholder="Iuran kas kelas" />
+          </div>
+          <div class="dlg-actions">
+            <button type="button" class="btn-ghost" id="catatCancel">Batal</button>
+            <button type="submit" class="btn-danger" id="catatSave" style="background:var(--green);">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= TEMPLATE WA ================= -->
+    <div class="overlay" id="tplOverlay" role="dialog" aria-modal="true" aria-labelledby="tplTitle">
+      <div class="dialog">
+        <h3 id="tplTitle">Template WhatsApp</h3>
+        <p style="margin:0 0 10px;color:var(--ink-2);font-size:13.5px;" id="tplSub">Kata kunci: {nama} {target} {dibayar} {kurang} {saku} {bendahara}. Kosongkan untuk kembali ke template bawaan.</p>
+        <textarea id="tplText" rows="9" style="width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;font-size:14px;"></textarea>
+        <div class="dlg-actions">
+          <button type="button" class="btn-ghost" id="tplCancel">Batal</button>
+          <button type="button" class="btn-danger" id="tplSave" style="background:var(--green);">Simpan</button>
+        </div>
+      </div>
+    </div>
+<script type="module">
+let FBX={ready:false};
+try{
+ const cfg=await import('./firebase-config.js');
+ if(!cfg.FIREBASE_CONFIG||String(cfg.FIREBASE_CONFIG.apiKey).startsWith('ISI'))throw new Error('config');
+ const V='https://www.gstatic.com/firebasejs/10.14.1/';
+ const [A,Au,Fs]=await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-auth.js'),import(V+'firebase-firestore.js')]);
+ const app=A.initializeApp(cfg.FIREBASE_CONFIG),au=Au.getAuth(app),fs=Fs.getFirestore(app),sn=s=>({exists:()=>s.exists(),data:()=>s.data()});
+ FBX={ready:true,admins:cfg.ADMINS||[],email:n=>'m'+n+'@ck05-kasboard.com',onAuth:cb=>Au.onAuthStateChanged(au,cb),user:()=>au.currentUser,
+  signup:(e,p)=>Au.createUserWithEmailAndPassword(au,e,p),login:(e,p)=>Au.signInWithEmailAndPassword(au,e,p),logout:()=>Au.signOut(au),
+  chpw:async(o,n)=>{const u=au.currentUser;await Au.reauthenticateWithCredential(u,Au.EmailAuthProvider.credential(u.email,o));await Au.updatePassword(u,n)},
+  db:{doc:p=>{const r=Fs.doc(fs,...p.split('/'));return{onSnapshot:(cb,er)=>Fs.onSnapshot(r,s=>cb(sn(s)),er),set:o=>Fs.setDoc(r,o),get:async()=>sn(await Fs.getDoc(r))}}}};
+}catch(e){console.warn('Firebase belum siap',e)}
+window.FBX=FBX;dispatchEvent(new Event('fbready'));
+</script><script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))</script>
     <script>
       // ---------- util ----------
       function rp(n) { return "Rp" + n.toLocaleString("id-ID"); }
@@ -904,135 +981,157 @@
         toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2600);
       }
 
-      // ---------- data dana ----------
-      var FUNDS = {
-        kas: {
-          label: "Kas Kelas",
-          saldo: 157410, masuk: 270000, keluar: 112590,
-          iuranRows: [
-            ["Iuran per anggota", "Rp10.000"],
-            ["Total anggota", "36 anggota"],
-            ["Sudah lunas", "27 anggota"],
-            ["Belum bayar", "9 anggota"]
-          ]
-        },
-        seminar: {
-          label: "Dana Seminar",
-          saldo: 1667000, masuk: 1667000, keluar: 0,
-          iuranRows: [
-            ["Iuran per anggota", "Rp77.000"],
-            ["Total pembayar", "22 anggota"],
-            ["Sudah lunas", "21 anggota"],
-            ["Kurang bayar", "1 anggota"]
-          ]
-        },
-        semua: {
-          label: "Semua Dana",
-          saldo: 1824410, masuk: 1937000, keluar: 112590,
-          iuranRows: [
-            ["Kas Kelas — iuran per anggota", "Rp10.000"],
-            ["Dana Seminar — iuran per anggota", "Rp77.000"],
-            ["Total pemasukan gabungan", "Rp1.937.000"],
-            ["Saldo gabungan", "Rp1.824.410"]
-          ]
-        }
-      };
+      // ---------- data dana: FUNDS dihitung dari Firestore (lihat computeDerived) ----------
 
-      // ---------- data anggota: status per dana ----------
-      // Status per dana: "LUNAS" (bayar penuh), "KURANG" (bayar sebagian), "BELUM" (Rp0).
-      // Kas Kelas: 27 LUNAS / 9 BELUM. Dana Seminar: 21 LUNAS / 1 KURANG (Panca) / 14 BELUM. Total 36 anggota.
-      // Susunan: 20 lunas di kedua dana; Panca kas LUNAS + seminar KURANG; 6 kas LUNAS + seminar BELUM
-      // (termasuk Lusi Darmayanti); Arif Hidayat kas BELUM + seminar LUNAS; 8 belum di kedua dana
-      // (termasuk Keysan Noval Musafa).
+      // ================= KASBOARD CK05 — versi online (Firebase) =================
+      // Data hidup di Firestore proyek kasboard-ck05:
+      //   kas/kelas, kas/seminar  -> {tx:[{id,t,k,d,m,a,n}], target, tpl}
+      //   kontak/wa               -> {n:{noAnggota: "62..."}}
+      // Status anggota, saldo, dan laporan SELALU dihitung dari transaksi (bukan data contoh).
+
       var FUND_DEF = {
         kas: { key: "kas", label: "Kas Kelas", iuran: 10000 },
         seminar: { key: "seminar", label: "Dana Seminar", iuran: 77000 }
       };
-      var MEMBERS_RAW = [
-        ["Ahmad Luthfi Sauki", "LUNAS", "LUNAS"],
-        ["Aisyah Satira", "LUNAS", "LUNAS"],
-        ["Alfiana Nurul Lisana", "LUNAS", "LUNAS"],
-        ["Arel Bisri Al Ayubi", "BELUM", "BELUM"],
-        ["Arif Hidayat", "BELUM", "LUNAS"],
-        ["Aulia Al Fillah", "LUNAS", "LUNAS"],
-        ["Farel Adi Pramudya", "LUNAS", "LUNAS"],
-        ["Hilman Nuari Ilyas", "LUNAS", "LUNAS"],
-        ["Hilwa Nurmaulida", "LUNAS", "LUNAS"],
-        ["Iif Dika Arnanda", "BELUM", "BELUM"],
-        ["Jessica Amelia Josman", "LUNAS", "LUNAS"],
-        ["Kenti Umi Gusmiarni", "BELUM", "BELUM"],
-        ["Keysan Noval Musafa", "BELUM", "BELUM"],
-        ["Lusi Darmayanti", "LUNAS", "BELUM"],
-        ["Maulina Karisma", "LUNAS", "LUNAS"],
-        ["Meisya Aly", "LUNAS", "LUNAS"],
-        ["Muhamad Alfiansyah Firdaus", "LUNAS", "LUNAS"],
-        ["Muhamad Rizal Subagza", "BELUM", "BELUM"],
-        ["Muhamad Sabriyansyah", "LUNAS", "LUNAS"],
-        ["Muhammad Amar Ma'ruf Natungga", "LUNAS", "LUNAS"],
-        ["Muhammad Gilbran Firdaus", "LUNAS", "LUNAS"],
-        ["Muhammad Iffaldo Gymnastiar", "BELUM", "BELUM"],
-        ["Mutiara Zakilla Dewi", "LUNAS", "LUNAS"],
-        ["Nabil Maulana", "LUNAS", "BELUM"],
-        ["Nadia Putri Prawita Sari", "LUNAS", "LUNAS"],
-        ["Noverianus Gulo", "BELUM", "BELUM"],
-        ["Panca Zuliyana Kartika", "LUNAS", "KURANG"],
-        ["Putri Masyifa Khairiyah Rully", "LUNAS", "LUNAS"],
-        ["Rahmat Andika Saputra", "LUNAS", "LUNAS"],
-        ["Salsa Indah Widya Santoso", "LUNAS", "BELUM"],
-        ["Shayla Ramadani", "LUNAS", "LUNAS"],
-        ["Syahriani Putri", "LUNAS", "BELUM"],
-        ["Talitha Zerlina Evendi", "LUNAS", "LUNAS"],
-        ["Vhanessa Aprillita", "LUNAS", "BELUM"],
-        ["Yulia Tri Amanda", "LUNAS", "BELUM"],
-        ["Zulfa Khairiyah", "BELUM", "BELUM"]
-      ];
-      // Nomor WA anggota TIDAK ditanam di kode halaman ini (data pribadi tidak boleh
-      // terbaca dari sumber halaman). Struktur siap diisi lewat jalur aman; selama
-      // kosong, tombol WA membuka WhatsApp untuk memilih kontak.
-      var PHONES = {};
-      function fundStatus(status, iuran) {
-        if (status === "LUNAS") return { status: "LUNAS", paid: iuran };
-        if (status === "KURANG") return { status: "KURANG", paid: 50000 };
+      var MOD_OF = { kas: "kelas", seminar: "seminar" };
+
+      // Daftar anggota: nomor urut + nama + NIM-hash (untuk verifikasi daftar, persis aplikasi lama)
+      // + nomor WA (format 62) dari data kelas Data_kls.xlsx.
+      var MEMBERS_BASE = [{"no": 1, "name": "AHMAD LUTHFI SAUKI", "hash": "057981a7e01dbd7404e57822f57ef85445aa692a288e0c4589560df8e7937585", "wa": "6285285027055"}, {"no": 2, "name": "AISYAH SATIRA", "hash": "e630e015d437325b3f7e9ad4ef4b8dde922a28d984aa2d7351fc91ccfb15a176", "wa": "6285294117896"}, {"no": 3, "name": "ALFIANA NURUL LISANA", "hash": "3cdbc85195c4596f8040e92b33f759fb8490bb2edbfd6c87bcdd46f3d28326c5", "wa": "628971596477"}, {"no": 4, "name": "AREL BISRI AL AYUBI", "hash": "efccce541fe47763fb342f1f9b2f853ac0f4cd6ce6f02977047cbfb9b715a141", "wa": "6281936850418"}, {"no": 5, "name": "ARIF HIDAYAT", "hash": "6ba07598d63397b95f89c71908bc74ee1ab8812ee6d70d9104ee94a1ceb27970", "wa": "6285117231372"}, {"no": 6, "name": "AULIA AL FILLAH", "hash": "33e3aaefe6b7791aab062282e7f4be1c2dff961e72dd54c359bb2e6d378bc0f4", "wa": "6285882694481"}, {"no": 7, "name": "FAREL ADI PRAMUDYA", "hash": "9660601d8fc853b6f72b56af2bb31e9c3ebe811e86418fa0fac39d0776f7d96b", "wa": "6283152443062"}, {"no": 8, "name": "HILMAN NUARI ILYAS", "hash": "ca700019170943a495a2a4959b8d9d06829a685d9a48cb66ef50c15fb8d15879", "wa": "6285156100326"}, {"no": 9, "name": "HILWA NURMAULIDA", "hash": "d3d62229843f4d0e094340f97de71e88ea25a1f18a083715d86cb39e4ec67d7a", "wa": "6283824855158"}, {"no": 10, "name": "IIF DIKA ARNANDA", "hash": "acfb4c7d859f4f494ac4b777152c8500bb6ad810c754719e5d750571de013a85", "wa": "6283898353638"}, {"no": 11, "name": "JESSICA AMELIA JOSMAN", "hash": "5f82e1070c9d9c2ffbe96d1f24291a2b8e1dcae3a4f2a37f64ec2043e3a9b858", "wa": "6287796725733"}, {"no": 12, "name": "KENTI UMI GUSMIARNI", "hash": "85a9b2e185f01f9de81fe789c65d5d6e64accb6a99f5870730e10e565bfa9c63", "wa": "6281325987913"}, {"no": 13, "name": "KEYSAN NOVAL MUSAFA", "hash": "80421a5d63149e93f27d176a9c291644faa4821e45896810fa5bea8128465584", "wa": "628978808997"}, {"no": 14, "name": "LUSI DARMAYANTI", "hash": "0abde1649f5b8be1bd5ef9d76057e929d6e301d9163d827ee08882067a597883", "wa": "6285880927813"}, {"no": 15, "name": "MAULINA KARISMA", "hash": "79cad79bf5301396b9d438058b24fda33c5620e46c641d6377e1a31217c6a08b", "wa": "6281293312945"}, {"no": 16, "name": "MEISYA ALY", "hash": "e6e1808b550dbd045f34ed6dd21bdced44b20f0bad69d0c9ba0e544e0c86c3b2", "wa": "628985734928"}, {"no": 17, "name": "MUHAMAD ALFIANSYAH FIRDAUS", "hash": "b637a6e96b25542fa3e46d8a65249e86958becfbb0f09675b5e6adf11d29900a", "wa": "6281389876104"}, {"no": 18, "name": "MUHAMAD RIZAL SUBAGZA", "hash": "afd82a9550397274d487e9d8184134dc42c8b2763320dcec4568ae85add976ec", "wa": "6285743081358"}, {"no": 19, "name": "MUHAMAD SABRIYANSYAH", "hash": "61dabfbda24fca4cde017ff9965e117e73a3c9c7c7ace3eeff3afcdb42f6fcd1", "wa": "6285719299152"}, {"no": 20, "name": "MUHAMMAD AMAR MA'RUF NATUNGGA", "hash": "f1df42b89ee21ddaadda07c40a0fdf5fdd9edbd15dd46299de1e4b0d2e7fff24", "wa": "628881173653"}, {"no": 21, "name": "MUHAMMAD GILBRAN FIRDAUS", "hash": "e8177398471898194ffe4d350e11b0d069e41db17999dc39ad46dae11f251990", "wa": "6281282618035"}, {"no": 22, "name": "MUHAMMAD IFFALDO GYMNASTIAR", "hash": "c2a49c01b6c5cba08d33cacabc1944c6796565acb50cf77bd51b40bd36042520", "wa": "6287884839996"}, {"no": 23, "name": "MUTIARA ZAKILLA DEWI", "hash": "786cafbb222e6ba59d909c8388be0e45ba800b71f7adcf6eabf3445c9b0c5840", "wa": "6285772436651"}, {"no": 24, "name": "NABIL MAULANA", "hash": "4517c627fd2fe176629c23c9bf3e223a6a572f5d75c2fa3d97a85b61aa5aeee9", "wa": "6281378228945"}, {"no": 25, "name": "NADIA PUTRI PRAWITA SARI", "hash": "412cd8487c7ab4571687dc28d95f3d78779993339b6182d290f0ccc67300d9d4", "wa": "6285697410286"}, {"no": 26, "name": "NOVERIANUS GULO", "hash": "3fb1ec29222b5a9ca47e1c6e2b589e25c6d3b65976d0219ed84104c11b135de7", "wa": "6285358542673"}, {"no": 27, "name": "PANCA ZULIYANA KARTIKA", "hash": "66e20f876109cfeb702b975e7e06654375a694b3fd918ad35331e83eec61e62c", "wa": "6281289866788"}, {"no": 28, "name": "PUTRI MASYIFA KHAIRIYAH RULLY", "hash": "dfc4abbb7782208c3a096a8da4aff1f1abc664f01e23d53befd9ab91239c1095", "wa": "6285180644907"}, {"no": 29, "name": "RAHMAT ANDIKA SAPUTRA", "hash": "a45e84c47c1ee9e399fbec7bf71a4a760ddd595459a6fb2a55c364f387d9f0ac", "wa": "628978261366"}, {"no": 30, "name": "SALSA INDAH WIDYA SANTOSO", "hash": "fb440e2cf9ef41140c24dd7dc46ac82e34bf4e45aaf3d8fce34104eec075f300", "wa": "6288291214822"}, {"no": 31, "name": "SHAYLA RAMADANI", "hash": "be5df55f1faf0c68783ae40bb6b4a67543bf7d759d7b328e7cc2543515def020", "wa": "6285692824584"}, {"no": 32, "name": "SYAHRIANI PUTRI", "hash": "fb387e20402f07f0f28d44f271b2a77f30e1e975d73d7101a8177a5a271fcac3", "wa": "6281219635389"}, {"no": 33, "name": "TALITHA ZERLINA EVENDI", "hash": "d66493a4e0b49cd3280112cc9f0c87add6a6539005c85263bed6a0002ef34c14", "wa": "6289526075485"}, {"no": 34, "name": "VHANESSA APRILLITA", "hash": "afdf10d74fc86b364df68a3236136d1df035009080d10c23ad68e581fda00f01", "wa": "6282390603960"}, {"no": 35, "name": "YULIA TRI AMANDA", "hash": "eafb9d6f3b3388897d24309316c35178e001cc637429988216d2b12a65a6e90e", "wa": "6282171271332"}, {"no": 36, "name": "ZULFA KHAIRIYAH", "hash": "c107109b82c7cc120ee2c4e7f92bab37d3126340998b83c6eb3de4c9c9b25d1c", "wa": "6287744647056"}];
+
+      var DB = {
+        kelas: { tx: [], target: 0, tpl: "" },
+        seminar: { tx: [], target: 0, tpl: "" }
+      };
+      var WA_MAP = {};
+      var FB = null;
+      var ME = null;      // {no, name}
+      var isAdmin = false;
+
+      function tcName(s) { return String(s || "").toLowerCase().replace(/\b\w/g, function (c) { return c.toUpperCase(); }); }
+      function normName(s) { return String(s || "").toUpperCase().replace(/\s+/g, " ").trim(); }
+      function memByNo(no) { return MEMBERS_BASE.filter(function (m) { return m.no === no; })[0] || null; }
+      function memByName(n) { var t = normName(n); return MEMBERS_BASE.filter(function (m) { return normName(m.name) === t; })[0] || null; }
+      function paidIn(fundKey, no) {
+        return DB[MOD_OF[fundKey]].tx.filter(function (x) { return x.t === "in" && x.m === no; })
+          .reduce(function (s, x) { return s + (+x.a || 0); }, 0);
+      }
+      function fundTotals(fundKey) {
+        var tx = DB[MOD_OF[fundKey]].tx, i = 0, o = 0;
+        tx.forEach(function (x) { if (x.t === "in") i += +x.a || 0; else o += +x.a || 0; });
+        return { masuk: i, keluar: o, saldo: i - o };
+      }
+      function statusOf(fundKey, no) {
+        var target = DB[MOD_OF[fundKey]].target || 0, p = paidIn(fundKey, no);
+        if (target > 0) {
+          if (p >= target) return { status: "LUNAS", paid: p };
+          if (p > 0) return { status: "KURANG", paid: p };
+          return { status: "BELUM", paid: 0 };
+        }
+        // target belum diatur di dokumen ini: pakai iuran baku dana
+        var iur = FUND_DEF[fundKey].iuran;
+        if (p >= iur) return { status: "LUNAS", paid: p };
+        if (p > 0) return { status: "KURANG", paid: p };
         return { status: "BELUM", paid: 0 };
       }
-      var MEMBERS = MEMBERS_RAW.map(function (r) {
-        return {
-          name: r[0],
-          phone: PHONES[r[0]] || "",
-          kas: fundStatus(r[1], FUND_DEF.kas.iuran),
-          seminar: fundStatus(r[2], FUND_DEF.seminar.iuran)
-        };
-      });
-      function waLink(member, message) {
-        var num = (member.phone || "").replace(/\D/g, "");
-        var intl = num ? "62" + num.replace(/^0+/, "") : "";
-        return "https://wa.me/" + intl + "?text=" + encodeURIComponent(message);
-      }
-      function memberNames(filterFn) {
-        return MEMBERS.filter(filterFn).map(function (m) { return m.name; });
-      }
-      var UNPAID_KAS = memberNames(function (m) { return m.kas.status === "BELUM"; });
-
-      // ---------- transaksi Kas Kelas ----------
-      // 27 pemasukan Rp10.000: 23 di 28–29 Okt 2026, 4 di awal Nov 2026. 1 pengeluaran.
+      var MEMBERS = [];
       var txData = [];
-      (function buildTx() {
-        var paidKas = MEMBERS.filter(function (m) { return m.kas.status === "LUNAS"; }).map(function (m) { return m.name; });
-        var id = 1;
-        paidKas.forEach(function (n, i) {
-          var date = i < 12 ? "2026-10-28" : (i < 23 ? "2026-10-29" : ["2026-11-02", "2026-11-03", "2026-11-04", "2026-11-05"][i - 23]);
-          txData.push({ id: id++, name: n, type: "masuk", amount: 10000, date: date, note: "Iuran kas kelas" });
+      var PAID_KAS = [], UNPAID_KAS = [], SEMINAR_PAID = [], SEMINAR_UNPAID = [];
+      var FUNDS = null;
+
+      function computeDerived() {
+        MEMBERS = MEMBERS_BASE.map(function (b) {
+          return {
+            no: b.no, name: b.name, phone: WA_MAP[b.no] || b.wa || "",
+            kas: statusOf("kas", b.no), seminar: statusOf("seminar", b.no)
+          };
         });
-        txData.push({ id: id++, name: "Beli Rol kelas", type: "keluar", amount: 112590, date: "2026-10-28", note: "Pengeluaran kas kelas" });
-      })();
+        function names(fundKey, st) {
+          return MEMBERS.filter(function (m) { return m[fundKey].status === st; }).map(function (m) { return m.name; });
+        }
+        UNPAID_KAS = names("kas", "BELUM");
+        SEMINAR_PAID = names("seminar", "LUNAS");
+        SEMINAR_UNPAID = names("seminar", "BELUM");
+        var actFund = (typeof currentFund !== "undefined" && currentFund !== "semua") ? currentFund : "kas";
+        txData = DB[MOD_OF[actFund]].tx.map(function (x, i) {
+          return {
+            id: i, xid: x.id, name: x.m ? (memByNo(x.m) ? tcName(memByNo(x.m).name) : "Anggota " + x.m) : (x.n || "Umum"),
+            type: x.t === "in" ? "masuk" : "keluar", amount: +x.a || 0, date: x.d || "",
+            note: x.n || x.k || ""
+          };
+        });
+        PAID_KAS = DB.kelas.tx.filter(function (x) { return x.t === "in" && x.m; })
+          .map(function (x) { return { name: memByNo(x.m) ? tcName(memByNo(x.m).name) : "Anggota " + x.m, date: x.d || "" }; });
+        var tk = fundTotals("kas"), ts = fundTotals("seminar");
+        var cnt = function (fk, st) { return MEMBERS.filter(function (m) { return m[fk].status === st; }).length; };
+        var kurangKas = cnt("kas", "KURANG"), kurangSem = cnt("seminar", "KURANG");
+        FUNDS = {
+          kas: { label: "Kas Kelas", saldo: tk.saldo, masuk: tk.masuk, keluar: tk.keluar, iuranRows: [
+            ["Iuran per anggota", rp(DB.kelas.target || FUND_DEF.kas.iuran)],
+            ["Total anggota", MEMBERS.length + " anggota"],
+            ["Sudah lunas", cnt("kas", "LUNAS") + " anggota"],
+            [kurangKas ? "Kurang bayar" : "Belum bayar", (kurangKas || cnt("kas", "BELUM")) + " anggota"]
+          ]},
+          seminar: { label: "Dana Seminar", saldo: ts.saldo, masuk: ts.masuk, keluar: ts.keluar, iuranRows: [
+            ["Iuran per anggota", rp(DB.seminar.target || FUND_DEF.seminar.iuran)],
+            ["Total pembayar", (cnt("seminar", "LUNAS") + cnt("seminar", "KURANG")) + " anggota"],
+            ["Sudah lunas", cnt("seminar", "LUNAS") + " anggota"],
+            ["Kurang bayar", kurangSem + " anggota"]
+          ]},
+          semua: { label: "Semua Dana", saldo: tk.saldo + ts.saldo, masuk: tk.masuk + ts.masuk, keluar: tk.keluar + ts.keluar, iuranRows: [
+            ["Kas Kelas — iuran per anggota", rp(DB.kelas.target || FUND_DEF.kas.iuran)],
+            ["Dana Seminar — iuran per anggota", rp(DB.seminar.target || FUND_DEF.seminar.iuran)],
+            ["Total pemasukan gabungan", rp(tk.masuk + ts.masuk)],
+            ["Saldo gabungan", rp(tk.saldo + ts.saldo)]
+          ]}
+        };
+      }
 
-      // Snapshot 27 pembayar Kas Kelas untuk daftar status di halaman Laporan
-      // (tetap 27 walau ada transaksi yang dihapus selama mencoba prototipe)
-      var PAID_KAS = txData.filter(function (t) { return t.type === "masuk"; }).map(function (t) { return { name: t.name, date: t.date }; });
+      // ---------- simpan ke Firestore ----------
+      var saveTimers = {};
+      function saveFund(modKey) {
+        if (!FB || !FB.ready) return;
+        clearTimeout(saveTimers[modKey]);
+        saveTimers[modKey] = setTimeout(function () {
+          FB.db.doc("kas/" + modKey).set(DB[modKey]).catch(function () {
+            showToast("Gagal menyimpan: hanya Ketua Kelas yang boleh mengubah data.");
+          });
+        }, 250);
+      }
+      function saveWA() {
+        if (!FB || !FB.ready) return;
+        var n = {};
+        MEMBERS_BASE.forEach(function (b) { if (WA_MAP[b.no]) n[b.no] = WA_MAP[b.no]; });
+        FB.db.doc("kontak/wa").set({ n: n }).catch(function () {});
+      }
 
-      // ---------- daftar status Dana Seminar (snapshot untuk Laporan) ----------
-      var SEMINAR_PAID = memberNames(function (m) { return m.seminar.status === "LUNAS"; });
-      var SEMINAR_UNPAID = memberNames(function (m) { return m.seminar.status === "BELUM"; });
+      // ---------- langganan data (realtime) ----------
+      var subscribed = false;
+      function subscribeData() {
+        if (subscribed || !FB || !FB.ready) return;
+        subscribed = true;
+        ["kelas", "seminar"].forEach(function (modKey) {
+          FB.db.doc("kas/" + modKey).onSnapshot(function (s) {
+            if (s.exists()) { var d = s.data(); DB[modKey] = { tx: d.tx || [], target: d.target || 0, tpl: d.tpl || "" }; }
+            refreshAll();
+          }, function () {});
+        });
+        FB.db.doc("kontak/wa").get().then(function (s) {
+          if (s.exists()) { var n = (s.data() || {}).n || {}; Object.keys(n).forEach(function (k) { WA_MAP[+k] = n[k]; }); refreshAll(); }
+        }).catch(function () {});
+      }
+
+      function refreshAll() {
+        computeDerived();
+        if (typeof renderBeranda === "function") renderBeranda();
+        if (typeof renderTx === "function") renderTx();
+        if (typeof renderReport === "function") renderReport();
+        if (typeof renderReportLists === "function") renderReportLists();
+        if (typeof renderAnggota === "function") renderAnggota();
+        var cr = document.getElementById("catatRow");
+        if (cr) cr.hidden = !isAdmin;
+      }
+
 
       // ---------- BERANDA ----------
       var currentFund = "kas";
@@ -1050,30 +1149,35 @@
         '</div>';
       }
 
+      function arrearsItemHTML(fundKey, m) {
+        var fd = FUND_DEF[fundKey], st = m[fundKey], target = DB[MOD_OF[fundKey]].target || fd.iuran;
+        if (st.status === "KURANG") {
+          return '<li><span class="avatar red">' + initials(m.name) + '</span><span class="who"><span class="nm">' + m.name + '</span><br /><span class="dt">' + fd.label + ' · baru bayar ' + rp(st.paid) + ' dari ' + rp(target) + '</span></span><span class="tag-kurang">Kurang ' + rp(target - st.paid) + '</span></li>';
+        }
+        return '<li><span class="avatar red">' + initials(m.name) + '</span><span class="who"><span class="nm">' + m.name + '</span><br /><span class="dt">' + fd.label + ' · iuran ' + rp(target) + '</span></span><span class="amt out">' + rp(target) + '</span></li>';
+      }
       function arrearsHTML() {
-        if (currentFund === "kas") {
+        function list(fundKey) {
+          return MEMBERS.filter(function (m) { return m[fundKey].status !== "LUNAS"; });
+        }
+        function block(fundKey) {
+          var l = list(fundKey);
+          if (!l.length) return { title: "Semua anggota sudah lunas", items: "", note: "Tidak ada tunggakan di " + FUND_DEF[fundKey].label + "." };
+          var adaKurang = l.some(function (m) { return m[fundKey].status === "KURANG"; });
           return {
-            title: "Belum bayar (9)",
-            items: UNPAID_KAS.map(function (n) {
-              return '<li><span class="avatar red">' + initials(n) + '</span><span class="who"><span class="nm">' + n + '</span><br /><span class="dt">Kas Kelas · iuran Rp10.000</span></span><span class="amt out">Rp10.000</span></li>';
-            }).join(""),
-            note: "Status pembayaran masih data contoh; nama anggota sudah data asli."
+            title: (adaKurang ? "Belum lunas" : "Belum bayar") + " (" + l.length + ")",
+            items: l.map(function (m) { return arrearsItemHTML(fundKey, m); }).join(""),
+            note: "Dihitung langsung dari data transaksi di Firebase."
           };
         }
-        if (currentFund === "seminar") {
-          return {
-            title: "Masih kurang (1)",
-            items: '<li><span class="avatar red">' + initials("Panca Zuliyana Kartika") + '</span><span class="who"><span class="nm">Panca Zuliyana Kartika</span><br /><span class="dt">Dana Seminar · baru bayar Rp50.000 dari Rp77.000</span></span><span class="tag-kurang">Kurang Rp27.000</span></li>',
-            note: "Satu-satunya peserta Dana Seminar yang belum lunas."
-          };
-        }
+        if (currentFund === "kas") return block("kas");
+        if (currentFund === "seminar") return block("seminar");
+        var a = block("kas"), b = block("seminar");
+        var total = list("kas").length + list("seminar").length;
         return {
-          title: "Belum lunas — semua dana (10)",
-          items: UNPAID_KAS.map(function (n) {
-            return '<li><span class="avatar red">' + initials(n) + '</span><span class="who"><span class="nm">' + n + '</span><br /><span class="dt">Kas Kelas · iuran Rp10.000</span></span><span class="amt out">Rp10.000</span></li>';
-          }).join("") +
-          '<li><span class="avatar red">' + initials("Panca Zuliyana Kartika") + '</span><span class="who"><span class="nm">Panca Zuliyana Kartika</span><br /><span class="dt">Dana Seminar · baru bayar Rp50.000 dari Rp77.000</span></span><span class="tag-kurang">Kurang Rp27.000</span></li>',
-          note: "Status pembayaran masih data contoh; nama anggota sudah data asli."
+          title: "Belum lunas — semua dana (" + total + ")",
+          items: a.items + b.items,
+          note: "Dihitung langsung dari data transaksi di Firebase."
         };
       }
 
@@ -1090,20 +1194,41 @@
 
         var qrisText;
         if (currentFund === "kas") {
-          qrisText = 'Iuran Kas Kelas <strong>Rp10.000</strong> — scan, bayar, lalu kirim bukti ke Ketua Kelas, Arif Hidayat';
+          qrisText = 'Iuran Kas Kelas <strong>' + rp(DB.kelas.target || 10000) + '</strong> — scan, bayar, lalu kirim bukti ke Ketua Kelas, Arif Hidayat';
         } else if (currentFund === "seminar") {
-          qrisText = 'Iuran Dana Seminar <strong>Rp77.000</strong> — scan, bayar, lalu kirim bukti ke Ketua Kelas, Arif Hidayat';
+          qrisText = 'Iuran Dana Seminar <strong>' + rp(DB.seminar.target || 77000) + '</strong> — scan, bayar, lalu kirim bukti ke Ketua Kelas, Arif Hidayat';
         } else {
-          qrisText = 'Iuran Kas Kelas <strong>Rp10.000</strong> · Iuran Dana Seminar <strong>Rp77.000</strong> — scan, bayar, lalu kirim bukti ke Ketua Kelas, Arif Hidayat';
+          qrisText = 'Iuran Kas Kelas <strong>' + rp(DB.kelas.target || 10000) + '</strong> · Iuran Dana Seminar <strong>' + rp(DB.seminar.target || 77000) + '</strong> — scan, bayar, lalu kirim bukti ke Ketua Kelas, Arif Hidayat';
         }
         document.getElementById("qrisHelper").innerHTML = qrisText;
         var qrisModalHelper = document.getElementById("qrisHelperModal");
         if (qrisModalHelper) qrisModalHelper.innerHTML = qrisText;
 
         var sb = document.getElementById("statusBlocks");
-        if (currentFund === "kas") sb.innerHTML = statusBlockHTML("", 27, 36, "Belum bayar", 9);
-        else if (currentFund === "seminar") sb.innerHTML = statusBlockHTML("", 21, 22, "Kurang bayar", 1);
-        else sb.innerHTML = statusBlockHTML("Kas Kelas", 27, 36, "Belum bayar", 9) + statusBlockHTML("Dana Seminar", 21, 22, "Kurang bayar", 1);
+        function blockFor(fk, withTitle) {
+          var lunas = MEMBERS.filter(function (m) { return m[fk].status === "LUNAS"; }).length;
+          var belum = MEMBERS.filter(function (m) { return m[fk].status === "BELUM"; }).length;
+          var kurang = MEMBERS.filter(function (m) { return m[fk].status === "KURANG"; }).length;
+          var label = kurang > 0 ? "Belum lunas" : "Belum bayar";
+          return statusBlockHTML(withTitle ? FUND_DEF[fk].label : "", lunas, MEMBERS.length, label, belum + kurang);
+        }
+        if (currentFund === "kas") sb.innerHTML = blockFor("kas", false);
+        else if (currentFund === "seminar") sb.innerHTML = blockFor("seminar", false);
+        else sb.innerHTML = blockFor("kas", true) + blockFor("seminar", true);
+        // Kartu pengeluaran terakhir mengikuti dana aktif
+        var expFund = currentFund === "seminar" ? "seminar" : "kas";
+        var outs = DB[MOD_OF[expFund]].tx.filter(function (x) { return x.t === "out"; });
+        var expList = document.querySelector("#expenseCard ul");
+        if (expList) {
+          if (!outs.length) {
+            expList.innerHTML = '<li><span class="who"><span class="dt">Belum ada pengeluaran di ' + FUND_DEF[expFund].label + '.</span></span></li>';
+          } else {
+            var last = outs[outs.length - 1];
+            expList.innerHTML = '<li><span class="avatar red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18l-1.5 9h-15z"/><path d="M3 6 2 3H0"/><circle cx="9" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/></svg></span>' +
+              '<span class="who"><span class="nm">' + (last.n || last.k || "Pengeluaran") + '</span><br /><span class="dt">' + fmtDate(last.d || "") + ' · ' + FUND_DEF[expFund].label + '</span></span>' +
+              '<span class="amt out">−' + rp(+last.a || 0) + '</span></li>';
+          }
+        }
 
         var a = arrearsHTML();
         document.getElementById("arrearsTitle").textContent = a.title;
@@ -1118,7 +1243,9 @@
         if (!btn) return;
         currentFund = btn.getAttribute("data-fund");
         this.querySelectorAll("button").forEach(function (b) { b.classList.toggle("active", b === btn); });
+        computeDerived();
         renderBeranda();
+        renderTx();
       });
 
       // ---------- QRIS: ketuk untuk memperbesar ----------
@@ -1152,6 +1279,14 @@
       }
 
       function renderTx() {
+        var mSel = document.getElementById("txMonth");
+        if (mSel) {
+          var cur = mSel.value;
+          var months = {};
+          txData.forEach(function (t) { if (t.date) months[t.date.slice(0, 7)] = true; });
+          mSel.innerHTML = '<option value="all">Semua bulan</option>' + Object.keys(months).sort().reverse().map(function (k) { return '<option value="' + k + '">' + monthName(k) + '</option>'; }).join("");
+          mSel.value = months[cur] ? cur : "all";
+        }
         var list = filteredTx();
         var ul = document.getElementById("txList");
         ul.innerHTML = list.map(function (t) {
@@ -1159,11 +1294,13 @@
             '<span class="tx-ic ' + t.type + '">' + iconSvg(t.type) + '</span>' +
             '<span class="tx-main"><span class="nm">' + t.name + '</span><br /><span class="dt">' + fmtDate(t.date) + ' · ' + t.note + '</span></span>' +
             '<span class="tx-right"><span class="amt ' + (t.type === "masuk" ? "in" : "out") + '">' + (t.type === "masuk" ? "+" : "−") + rp(t.amount) + '</span>' +
-            '<button type="button" class="tx-del" data-del="' + t.id + '" aria-label="Hapus transaksi ' + t.name + '">×</button></span>' +
+            (isAdmin ? '<button type="button" class="tx-del" data-del="' + t.id + '" aria-label="Hapus transaksi">×</button>' : '') + '</span>' +
           '</li>';
         }).join("");
         document.getElementById("txEmpty").hidden = list.length > 0;
         document.getElementById("txCount").textContent = "Menampilkan " + list.length + " dari " + txData.length + " transaksi";
+        var ts = document.getElementById("txSub");
+        if (ts) ts.textContent = "Transaksi " + (actFundKey() === "kas" ? "Kas Kelas" : "Dana Seminar") + " — ganti dana lewat pemilih di Beranda. Ketuk tanda × untuk menghapus (khusus Ketua Kelas) — akan muncul konfirmasi dulu.";
       }
 
       document.getElementById("txSearch").addEventListener("input", renderTx);
@@ -1194,47 +1331,62 @@
       overlay.addEventListener("click", function (e) { if (e.target === overlay) closeDialog(); });
       document.getElementById("deleteConfirm").addEventListener("click", function () {
         if (pendingDeleteId === null) return;
-        txData = txData.filter(function (t) { return t.id !== pendingDeleteId; });
+        var t = txData.filter(function (x) { return x.id === pendingDeleteId; })[0];
+        if (t && t.xid) {
+          var modKey = MOD_OF[actFundKey()];
+          DB[modKey].tx = DB[modKey].tx.filter(function (x) { return x.id !== t.xid; });
+          saveFund(modKey);
+        }
         closeDialog();
-        renderTx();
-        showToast("Transaksi dihapus (hanya di prototipe ini).");
+        refreshAll();
+        showToast("Transaksi dihapus dan tersimpan di Firebase.");
       });
 
       // ---------- LAPORAN ----------
-      var TABLES = {
-        kas: {
-          title: "Rincian per bulan — Kas Kelas",
-          html: '<table class="report"><thead><tr><th>Bulan</th><th class="num">Masuk</th><th class="num">Keluar</th></tr></thead>' +
-            '<tbody>' +
-            '<tr><td>Oktober 2026</td><td class="num">Rp230.000</td><td class="num">Rp112.590</td></tr>' +
-            '<tr><td>November 2026</td><td class="num">Rp40.000</td><td class="num">Rp0</td></tr>' +
-            '</tbody>' +
-            '<tfoot><tr><td>Total</td><td class="num">Rp270.000</td><td class="num">Rp112.590</td></tr></tfoot></table>' +
-            '<p class="fineprint">Saldo akhir Kas Kelas: Rp270.000 − Rp112.590 = <strong>Rp157.410</strong>.</p>'
-        },
-        seminar: {
-          title: "Rincian penerimaan — Dana Seminar",
-          html: '<table class="report"><thead><tr><th>Keterangan</th><th class="num">Jumlah</th></tr></thead>' +
-            '<tbody>' +
-            '<tr><td>Iuran lunas — 21 anggota × Rp77.000</td><td class="num">Rp1.617.000</td></tr>' +
-            '<tr><td>Bayar sebagian — Panca Zuliyana Kartika</td><td class="num">Rp50.000</td></tr>' +
-            '<tr><td>Pengeluaran</td><td class="num">Rp0</td></tr>' +
-            '</tbody>' +
-            '<tfoot><tr><td>Total masuk / saldo</td><td class="num">Rp1.667.000</td></tr></tfoot></table>' +
-            '<p class="fineprint">Masih kurang: Panca Zuliyana Kartika <strong>Rp27.000</strong> (dari iuran Rp77.000, baru terbayar Rp50.000).</p>'
-        },
-        semua: {
-          title: "Rincian gabungan — Semua Dana",
-          html: '<table class="report"><thead><tr><th>Dana</th><th class="num">Masuk</th><th class="num">Keluar</th><th class="num">Saldo</th></tr></thead>' +
-            '<tbody>' +
-            '<tr><td>Kas Kelas</td><td class="num">Rp270.000</td><td class="num">Rp112.590</td><td class="num">Rp157.410</td></tr>' +
-            '<tr><td>Dana Seminar</td><td class="num">Rp1.667.000</td><td class="num">Rp0</td><td class="num">Rp1.667.000</td></tr>' +
-            '</tbody>' +
-            '<tfoot><tr><td>Total</td><td class="num">Rp1.937.000</td><td class="num">Rp112.590</td><td class="num">Rp1.824.410</td></tr></tfoot></table>'
-        }
-      };
+      function monthRows(fundKey) {
+        var by = {};
+        DB[MOD_OF[fundKey]].tx.forEach(function (x) {
+          var k = (x.d || "").slice(0, 7) || "—";
+          if (!by[k]) by[k] = { masuk: 0, keluar: 0 };
+          if (x.t === "in") by[k].masuk += +x.a || 0; else by[k].keluar += +x.a || 0;
+        });
+        return Object.keys(by).sort().map(function (k) { return { k: k, masuk: by[k].masuk, keluar: by[k].keluar }; });
+      }
+      var MONTH_ID = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      function monthName(k) {
+        var p = k.split("-");
+        return (MONTH_ID[+p[1]] || k) + " " + (p[0] || "");
+      }
+      function buildTables() {
+        var tk = fundTotals("kas"), ts = fundTotals("seminar");
+        var rowsKas = monthRows("kas");
+        var htmlKas = '<table class="report"><thead><tr><th>Bulan</th><th class="num">Masuk</th><th class="num">Keluar</th></tr></thead><tbody>' +
+          (rowsKas.length ? rowsKas.map(function (r) { return '<tr><td>' + monthName(r.k) + '</td><td class="num">' + rp(r.masuk) + '</td><td class="num">' + rp(r.keluar) + '</td></tr>'; }).join("") : '<tr><td>Belum ada transaksi</td><td class="num">Rp0</td><td class="num">Rp0</td></tr>') +
+          '</tbody><tfoot><tr><td>Total</td><td class="num">' + rp(tk.masuk) + '</td><td class="num">' + rp(tk.keluar) + '</td></tr></tfoot></table>' +
+          '<p class="fineprint">Saldo akhir Kas Kelas: ' + rp(tk.masuk) + ' − ' + rp(tk.keluar) + ' = <strong>' + rp(tk.saldo) + '</strong>.</p>';
+        var semKurang = MEMBERS.filter(function (m) { return m.seminar.status === "KURANG"; });
+        var targetSem = DB.seminar.target || FUND_DEF.seminar.iuran;
+        var lunasSem = MEMBERS.filter(function (m) { return m.seminar.status === "LUNAS"; }).length;
+        var htmlSem = '<table class="report"><thead><tr><th>Keterangan</th><th class="num">Jumlah</th></tr></thead><tbody>' +
+          '<tr><td>Iuran lunas — ' + lunasSem + ' anggota × ' + rp(targetSem) + '</td><td class="num">' + rp(lunasSem * targetSem) + '</td></tr>' +
+          semKurang.map(function (m) { return '<tr><td>Bayar sebagian — ' + m.name + '</td><td class="num">' + rp(m.seminar.paid) + '</td></tr>'; }).join("") +
+          '<tr><td>Pengeluaran</td><td class="num">' + rp(ts.keluar) + '</td></tr>' +
+          '</tbody><tfoot><tr><td>Total masuk / saldo</td><td class="num">' + rp(ts.saldo) + '</td></tr></tfoot></table>' +
+          (semKurang.length ? '<p class="fineprint">Masih kurang: ' + semKurang.map(function (m) { return m.name + ' <strong>' + rp(targetSem - m.seminar.paid) + '</strong> (baru terbayar ' + rp(m.seminar.paid) + ')'; }).join("; ") + '.</p>' : '<p class="fineprint">Semua pembayar Dana Seminar sudah lunas.</p>');
+        var htmlAll = '<table class="report"><thead><tr><th>Dana</th><th class="num">Masuk</th><th class="num">Keluar</th><th class="num">Saldo</th></tr></thead><tbody>' +
+          '<tr><td>Kas Kelas</td><td class="num">' + rp(tk.masuk) + '</td><td class="num">' + rp(tk.keluar) + '</td><td class="num">' + rp(tk.saldo) + '</td></tr>' +
+          '<tr><td>Dana Seminar</td><td class="num">' + rp(ts.masuk) + '</td><td class="num">' + rp(ts.keluar) + '</td><td class="num">' + rp(ts.saldo) + '</td></tr>' +
+          '</tbody><tfoot><tr><td>Total</td><td class="num">' + rp(tk.masuk + ts.masuk) + '</td><td class="num">' + rp(tk.keluar + ts.keluar) + '</td><td class="num">' + rp(tk.saldo + ts.saldo) + '</td></tr></tfoot></table>';
+        return {
+          kas: { title: "Rincian per bulan — Kas Kelas", html: htmlKas },
+          seminar: { title: "Rincian penerimaan — Dana Seminar", html: htmlSem },
+          semua: { title: "Rincian gabungan — Semua Dana", html: htmlAll }
+        };
+      }
+      var TABLES = buildTables();
       var reportFund = "kas";
       function renderReport() {
+        TABLES = buildTables();
         var f = FUNDS[reportFund];
         document.getElementById("repIn").textContent = rp(f.masuk);
         document.getElementById("repOut").textContent = rp(f.keluar);
@@ -1257,27 +1409,43 @@
         // Label cakupan pada kartu ekspor
         document.getElementById("exportScopeLabel").textContent = reportFund === "semua" ? "Kas Kelas + Dana Seminar" : "hanya " + f.label;
         document.getElementById("exportNote").textContent = reportFund === "semua"
-          ? "Berkas yang diunduh berisi kedua dana (Kas Kelas dan Dana Seminar) plus total gabungan Rp1.824.410."
+          ? "Berkas yang diunduh berisi kedua dana (Kas Kelas dan Dana Seminar) plus total gabungan " + rp(FUNDS.semua.saldo) + "."
           : "Berkas yang diunduh hanya berisi data " + f.label + " — tidak ada angka, nama, atau bagian dana lain di dalamnya.";
       }
       // Daftar status anggota Kas Kelas — selalu tampil di Laporan agar siap dibagikan ke grup kelas
       function renderReportLists() {
-        var paid = PAID_KAS.slice().sort(function (a, b) { return a.name.localeCompare(b.name, "id"); });
-        document.getElementById("reportPaidList").innerHTML = paid.map(function (p) {
-          return '<li><span class="avatar">' + initials(p.name) + '</span><span class="who"><span class="nm">' + p.name + '</span><br /><span class="dt">Iuran Rp10.000 · ' + fmtDate(p.date) + '</span></span><span class="tag-lunas">LUNAS</span></li>';
-        }).join("");
-        document.getElementById("reportUnpaidList").innerHTML = UNPAID_KAS.map(function (n) {
-          return '<li><span class="avatar red">' + initials(n) + '</span><span class="who"><span class="nm">' + n + '</span><br /><span class="dt">Iuran Rp10.000 · belum dibayar</span></span><span class="tag-belum">BELUM</span></li>';
-        }).join("");
-        // Dana Seminar — format yang sama seperti Kas Kelas
-        var semPaid = SEMINAR_PAID.slice().sort(function (a, b) { return a.localeCompare(b, "id"); });
-        document.getElementById("reportSemPaidList").innerHTML = semPaid.map(function (n) {
-          return '<li><span class="avatar">' + initials(n) + '</span><span class="who"><span class="nm">' + n + '</span><br /><span class="dt">Dana Seminar · iuran Rp77.000</span></span><span class="tag-lunas">LUNAS</span></li>';
-        }).join("");
-        var semUnpaid = SEMINAR_UNPAID.slice().sort(function (a, b) { return a.localeCompare(b, "id"); });
-        document.getElementById("reportSemUnpaidList").innerHTML = semUnpaid.map(function (n) {
-          return '<li><span class="avatar red">' + initials(n) + '</span><span class="who"><span class="nm">' + n + '</span><br /><span class="dt">Dana Seminar · iuran Rp77.000 · belum dibayar</span></span><span class="tag-belum">BELUM</span></li>';
-        }).join("");
+        function nm(m) { return m.name; }
+        var paidKas = MEMBERS.filter(function (m) { return m.kas.status === "LUNAS"; }).map(nm).sort(function (a, b) { return a.localeCompare(b, "id"); });
+        var unpaidKas = MEMBERS.filter(function (m) { return m.kas.status === "BELUM"; }).map(nm);
+        var kurangKas = MEMBERS.filter(function (m) { return m.kas.status === "KURANG"; });
+        var semPaid = MEMBERS.filter(function (m) { return m.seminar.status === "LUNAS"; }).map(nm).sort(function (a, b) { return a.localeCompare(b, "id"); });
+        var semUnpaid = MEMBERS.filter(function (m) { return m.seminar.status === "BELUM"; }).map(nm);
+        var semKurang = MEMBERS.filter(function (m) { return m.seminar.status === "KURANG"; });
+        var targetKas = DB.kelas.target || FUND_DEF.kas.iuran, targetSem = DB.seminar.target || FUND_DEF.seminar.iuran;
+        function li(n, red) {
+          return '<li><span class="avatar' + (red ? ' red' : '') + '">' + initials(n) + '</span><span class="who"><span class="nm">' + n + '</span></span></li>';
+        }
+        var hKasPaid = document.querySelector("#repCardKasPaid h2"); if (hKasPaid) hKasPaid.textContent = "Sudah Bayar — Kas Kelas (" + paidKas.length + ")";
+        document.getElementById("reportPaidList").innerHTML = paidKas.map(function (n) { return li(n, false); }).join("");
+        var hKasUn = document.querySelector("#repCardKasUnpaid h2"); if (hKasUn) hKasUn.textContent = "Belum Lunas — Kas Kelas (" + (unpaidKas.length + kurangKas.length) + ")";
+        document.getElementById("reportUnpaidList").innerHTML =
+          unpaidKas.map(function (n) { return li(n, true); }).join("") +
+          kurangKas.map(function (m) {
+            return '<li><span class="avatar red">' + initials(m.name) + '</span><span class="who"><span class="nm">' + m.name + '</span><br /><span class="dt">Baru bayar ' + rp(m.kas.paid) + ' dari ' + rp(targetKas) + '</span></span><span class="tag-kurang">KURANG ' + rp(targetKas - m.kas.paid) + '</span></li>';
+          }).join("");
+        var hSemPaid = document.querySelector("#repCardSemPaid h2"); if (hSemPaid) hSemPaid.textContent = "Sudah Bayar — Dana Seminar (" + semPaid.length + " Lunas)";
+        document.getElementById("reportSemPaidList").innerHTML = semPaid.map(function (n) { return li(n, false); }).join("");
+        var cardKurang = document.getElementById("repCardSemKurang");
+        if (cardKurang) {
+          cardKurang.style.display = (reportFund !== "kas" && semKurang.length) ? "" : "none";
+          var hK = cardKurang.querySelector("h2"); if (hK) hK.textContent = "Kurang Bayar — Dana Seminar (" + semKurang.length + ")";
+          var ulK = cardKurang.querySelector("ul");
+          if (ulK) ulK.innerHTML = semKurang.map(function (m) {
+            return '<li><span class="avatar red">' + initials(m.name) + '</span><span class="who"><span class="nm">' + m.name + '</span><br /><span class="dt">Baru bayar ' + rp(m.seminar.paid) + ' dari iuran ' + rp(targetSem) + '</span></span><span class="tag-kurang">KURANG ' + rp(targetSem - m.seminar.paid) + '</span></li>';
+          }).join("");
+        }
+        var hSemUn = document.querySelector("#repCardSemUnpaid h2"); if (hSemUn) hSemUn.textContent = "Belum Bayar — Dana Seminar (" + semUnpaid.length + ")";
+        document.getElementById("reportSemUnpaidList").innerHTML = semUnpaid.map(function (n) { return li(n, true); }).join("");
       }
       document.getElementById("reportSwitch").addEventListener("click", function (e) {
         var btn = e.target.closest("button[data-rfund]");
@@ -1289,56 +1457,76 @@
       // ---------- EKSPOR PER DANA ----------
       // Seluruh isi ekspor dibangun HANYA dari dana yang aktif (reportFund).
       function buildExportData() {
-        var kasLists = [
-          { title: "Sudah Bayar — Kas Kelas (27)", rows: PAID_KAS.slice().sort(function (a, b) { return a.name.localeCompare(b.name, "id"); }).map(function (p) {
-              return [p.name, "Iuran Rp10.000 · " + fmtDate(p.date), "LUNAS"];
-            }) },
-          { title: "Belum Bayar — Kas Kelas (9)", rows: UNPAID_KAS.map(function (n) {
-              return [n, "Iuran Rp10.000 · belum dibayar", "BELUM"];
-            }) }
-        ];
-        var semLists = [
-          { title: "Sudah Bayar — Dana Seminar (21 Lunas)", rows: SEMINAR_PAID.slice().sort(function (a, b) { return a.localeCompare(b, "id"); }).map(function (n) {
-              return [n, "Dana Seminar · iuran Rp77.000", "LUNAS"];
-            }) },
-          { title: "Kurang Bayar — Dana Seminar (1)", rows: [["Panca Zuliyana Kartika", "Baru bayar Rp50.000 dari iuran Rp77.000", "KURANG Rp27.000"]] },
-          { title: "Belum Bayar — Dana Seminar (14)", rows: SEMINAR_UNPAID.slice().sort(function (a, b) { return a.localeCompare(b, "id"); }).map(function (n) {
-              return [n, "Dana Seminar · iuran Rp77.000 · belum dibayar", "BELUM"];
-            }) }
-        ];
+        function rowsPaid(fundKey) {
+          return MEMBERS.filter(function (m) { return m[fundKey].status === "LUNAS"; })
+            .slice().sort(function (a, b) { return a.name.localeCompare(b.name, "id"); })
+            .map(function (m) {
+              var fd = FUND_DEF[fundKey], target = DB[MOD_OF[fundKey]].target || fd.iuran;
+              var lastDate = "";
+              DB[MOD_OF[fundKey]].tx.forEach(function (x) { if (x.t === "in" && x.m === m.no && x.d > lastDate) lastDate = x.d; });
+              return [m.name, "Iuran " + rp(target) + (lastDate ? " · " + fmtDate(lastDate) : ""), "LUNAS"];
+            });
+        }
+        function rowsBelum(fundKey) {
+          var fd = FUND_DEF[fundKey], target = DB[MOD_OF[fundKey]].target || fd.iuran;
+          return MEMBERS.filter(function (m) { return m[fundKey].status === "BELUM"; })
+            .map(function (m) { return [m.name, fd.label + " · iuran " + rp(target) + " · belum dibayar", "BELUM"]; });
+        }
+        function rowsKurang(fundKey) {
+          var fd = FUND_DEF[fundKey], target = DB[MOD_OF[fundKey]].target || fd.iuran;
+          return MEMBERS.filter(function (m) { return m[fundKey].status === "KURANG"; })
+            .map(function (m) { return [m.name, "Baru bayar " + rp(m[fundKey].paid) + " dari iuran " + rp(target), "KURANG " + rp(target - m[fundKey].paid)]; });
+        }
+        function listsFor(fundKey) {
+          var fd = FUND_DEF[fundKey], out = [];
+          var p = rowsPaid(fundKey); out.push({ title: "Sudah Bayar — " + fd.label + " (" + p.length + ")", rows: p });
+          var k = rowsKurang(fundKey); if (k.length) out.push({ title: "Kurang Bayar — " + fd.label + " (" + k.length + ")", rows: k });
+          var b = rowsBelum(fundKey); out.push({ title: "Belum Bayar — " + fd.label + " (" + b.length + ")", rows: b });
+          return out;
+        }
+        var tk = fundTotals("kas"), ts = fundTotals("seminar");
         if (reportFund === "kas") {
+          var rk = monthRows("kas");
           return {
             label: "Kas Kelas", slug: "kas-kelas",
-            summary: [["Total Masuk", "Rp270.000"], ["Total Keluar", "Rp112.590"], ["Saldo", "Rp157.410"]],
+            summary: [["Total Masuk", rp(tk.masuk)], ["Total Keluar", rp(tk.keluar)], ["Saldo", rp(tk.saldo)]],
             tableTitle: "Rincian per bulan — Kas Kelas",
             tableHead: ["Bulan", "Masuk", "Keluar"],
-            tableRows: [["Oktober 2026", "Rp230.000", "Rp112.590"], ["November 2026", "Rp40.000", "Rp0"]],
-            tableFoot: ["Total", "Rp270.000", "Rp112.590"],
-            tableNote: "Saldo akhir Kas Kelas: Rp270.000 − Rp112.590 = Rp157.410.",
-            lists: kasLists
+            tableRows: rk.length ? rk.map(function (r) { return [monthName(r.k), rp(r.masuk), rp(r.keluar)]; }) : [["Belum ada transaksi", "Rp0", "Rp0"]],
+            tableFoot: ["Total", rp(tk.masuk), rp(tk.keluar)],
+            tableNote: "Saldo akhir Kas Kelas: " + rp(tk.masuk) + " − " + rp(tk.keluar) + " = " + rp(tk.saldo) + ".",
+            lists: listsFor("kas")
           };
         }
         if (reportFund === "seminar") {
+          var targetSem = DB.seminar.target || FUND_DEF.seminar.iuran;
+          var lunasSem = MEMBERS.filter(function (m) { return m.seminar.status === "LUNAS"; }).length;
+          var kurangSem = MEMBERS.filter(function (m) { return m.seminar.status === "KURANG"; });
+          var semRows = [["Iuran lunas — " + lunasSem + " anggota × " + rp(targetSem), rp(lunasSem * targetSem)]];
+          kurangSem.forEach(function (m) { semRows.push(["Bayar sebagian — " + m.name, rp(m.seminar.paid)]); });
+          semRows.push(["Pengeluaran", rp(ts.keluar)]);
           return {
             label: "Dana Seminar", slug: "dana-seminar",
-            summary: [["Total Masuk", "Rp1.667.000"], ["Total Keluar", "Rp0"], ["Saldo", "Rp1.667.000"]],
+            summary: [["Total Masuk", rp(ts.masuk)], ["Total Keluar", rp(ts.keluar)], ["Saldo", rp(ts.saldo)]],
             tableTitle: "Rincian penerimaan — Dana Seminar",
             tableHead: ["Keterangan", "Jumlah"],
-            tableRows: [["Iuran lunas — 21 anggota × Rp77.000", "Rp1.617.000"], ["Bayar sebagian — Panca Zuliyana Kartika", "Rp50.000"], ["Pengeluaran", "Rp0"]],
-            tableFoot: ["Total masuk / saldo", "Rp1.667.000"],
-            tableNote: "Masih kurang: Panca Zuliyana Kartika Rp27.000 (dari iuran Rp77.000, baru terbayar Rp50.000).",
-            lists: semLists
+            tableRows: semRows,
+            tableFoot: ["Total masuk / saldo", rp(ts.saldo)],
+            tableNote: kurangSem.length
+              ? "Masih kurang: " + kurangSem.map(function (m) { return m.name + " " + rp(targetSem - m.seminar.paid) + " (dari iuran " + rp(targetSem) + ", baru terbayar " + rp(m.seminar.paid) + ")"; }).join("; ") + "."
+              : "Semua pembayar Dana Seminar sudah lunas.",
+            lists: listsFor("seminar")
           };
         }
         return {
           label: "Semua Dana", slug: "semua-dana",
-          summary: [["Total Masuk", "Rp1.937.000"], ["Total Keluar", "Rp112.590"], ["Saldo Gabungan", "Rp1.824.410"]],
+          summary: [["Total Masuk", rp(tk.masuk + ts.masuk)], ["Total Keluar", rp(tk.keluar + ts.keluar)], ["Saldo Gabungan", rp(tk.saldo + ts.saldo)]],
           tableTitle: "Rincian gabungan — Semua Dana",
           tableHead: ["Dana", "Masuk", "Keluar", "Saldo"],
-          tableRows: [["Kas Kelas", "Rp270.000", "Rp112.590", "Rp157.410"], ["Dana Seminar", "Rp1.667.000", "Rp0", "Rp1.667.000"]],
-          tableFoot: ["Total", "Rp1.937.000", "Rp112.590", "Rp1.824.410"],
-          tableNote: "Saldo gabungan: Rp157.410 + Rp1.667.000 = Rp1.824.410.",
-          lists: kasLists.concat(semLists)
+          tableRows: [["Kas Kelas", rp(tk.masuk), rp(tk.keluar), rp(tk.saldo)], ["Dana Seminar", rp(ts.masuk), rp(ts.keluar), rp(ts.saldo)]],
+          tableFoot: ["Total", rp(tk.masuk + ts.masuk), rp(tk.keluar + ts.keluar), rp(tk.saldo + ts.saldo)],
+          tableNote: "Saldo gabungan: " + rp(tk.saldo) + " + " + rp(ts.saldo) + " = " + rp(tk.saldo + ts.saldo) + ".",
+          lists: listsFor("kas").concat(listsFor("seminar"))
         };
       }
 
@@ -1457,7 +1645,7 @@
           y += LH;
         });
         ctx.font = FONTS.dim; ctx.fillStyle = "#7d8f86";
-        ctx.fillText("Prototipe revisi KasBoard CK05 — nama anggota data asli; status pembayaran masih data contoh.", PAD, H - PAD + 16);
+        ctx.fillText("KasBoard CK05 — data langsung dari Firebase kasboard-ck05.", PAD, H - PAD + 16);
         if (cv.toBlob) {
           cv.toBlob(function (blob) {
             if (blob) downloadBlob(blob, "laporan-" + d.slug + "-ck05.jpg");
@@ -1491,67 +1679,234 @@
         });
       });
 
-      // ---------- login (khusus 3 pengurus) ----------
-      var OFFICERS = [
-        { name: "Arif Hidayat", role: "Ketua Kelas", code: "01IKOK005" },
-        { name: "Rahmat Andika Saputra", role: "Wakil Ketua Kelas", code: "01IKOK005" },
-        { name: "Shayla Ramadani", role: "Sekretaris", code: "01IKOK005" }
-      ];
+      // ---------- autentikasi Firebase (sistem sama seperti aplikasi lama) ----------
       var currentUser = null;
-      function normName(s) { return (s || "").trim().replace(/\s+/g, " ").toLowerCase(); }
-      function normCode(s) { return (s || "").trim().toUpperCase(); }
+      var authMode = "login"; // login | register | reset
+      var authBusy = false;
+      async function nimHash(n) {
+        var key = await crypto.subtle.importKey("raw", new TextEncoder().encode(String(n).trim()), "PBKDF2", false, ["deriveBits"]);
+        var bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: new TextEncoder().encode("kasboard-ck05"), iterations: 200000 }, key, 256);
+        return Array.from(new Uint8Array(bits)).map(function (x) { return x.toString(16).padStart(2, "0"); }).join("");
+      }
+      function authError(msg) {
+        var err = document.getElementById("loginError");
+        if (!msg) { err.classList.remove("show"); err.textContent = ""; return; }
+        err.textContent = msg;
+        err.classList.add("show");
+      }
+      function setAuthMode(mode) {
+        authMode = mode;
+        authError("");
+        document.getElementById("nimField").hidden = mode === "login";
+        document.getElementById("code2Field").hidden = mode === "login";
+        document.getElementById("authSwitch").hidden = mode !== "login";
+        document.getElementById("authBack").hidden = mode === "login";
+        document.getElementById("loginBtn").textContent = mode === "login" ? "Masuk" : (mode === "register" ? "Daftar" : "Atur ulang kode");
+        document.getElementById("authSub").textContent = mode === "login"
+          ? "Masuk untuk mengelola keuangan kelas 01IKOK005."
+          : (mode === "register" ? "Daftar dengan nama + NIM sesuai data kelas, lalu buat kode akses kamu." : "Atur ulang kode akses dengan verifikasi NIM.");
+        document.getElementById("authNote").textContent = mode === "login"
+          ? "Masuk cukup nama + kode akses kamu. Belum pernah daftar? Klik Daftar sekarang."
+          : "Kode akses minimal 6 karakter dan hanya tersimpan sebagai akun Firebase kamu sendiri.";
+      }
+      document.getElementById("toRegister").addEventListener("click", function (e) { e.preventDefault(); setAuthMode("register"); });
+      document.getElementById("toReset").addEventListener("click", function (e) { e.preventDefault(); setAuthMode("reset"); });
+      document.getElementById("toLogin").addEventListener("click", function (e) { e.preventDefault(); setAuthMode("login"); });
+      ["loginName", "loginCode", "loginNim", "loginCode2"].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener("input", function () { authError(""); });
+      });
 
-      document.getElementById("loginForm").addEventListener("submit", function (e) {
+      document.getElementById("loginForm").addEventListener("submit", async function (e) {
         e.preventDefault();
+        if (!FB || !FB.ready) { authError("Firebase belum siap. Periksa koneksi internet lalu coba lagi."); return; }
+        if (authBusy) return;
         var nameIn = document.getElementById("loginName").value;
         var codeIn = document.getElementById("loginCode").value;
-        var match = null;
-        OFFICERS.forEach(function (o) {
-          if (normName(o.name) === normName(nameIn) && normCode(o.code) === normCode(codeIn)) match = o;
-        });
-        var err = document.getElementById("loginError");
-        if (!match) {
-          err.classList.add("show");
-          return;
+        var m = memByName(nameIn);
+        if (!m) { authError("Nama tidak ditemukan di daftar kelas. Isi nama sesuai daftar mahasiswa."); return; }
+        authBusy = true;
+        try {
+          if (authMode === "login") {
+            if (!codeIn) { authError("Isi kode akses kamu."); authBusy = false; return; }
+            await FB.login(FB.email(m.no), codeIn);
+            document.getElementById("loginCode").value = "";
+          } else {
+            var nim = document.getElementById("loginNim").value.replace(/\D/g, "");
+            var code2 = document.getElementById("loginCode2").value;
+            if (!nim) { authError("Isi NIM kamu untuk verifikasi."); authBusy = false; return; }
+            var h = await nimHash(nim);
+            if (h !== m.hash) { authError("NIM tidak sesuai dengan nama ini. Pendaftaran tidak dapat dilanjutkan."); authBusy = false; return; }
+            if (codeIn.length < 6) { authError("Kode akses minimal 6 karakter."); authBusy = false; return; }
+            if (codeIn !== code2) { authError("Kode akses tidak sama."); authBusy = false; return; }
+            if (authMode === "register") {
+              try {
+                await FB.signup(FB.email(m.no), codeIn);
+              } catch (e2) {
+                if (e2 && e2.code === "auth/email-already-in-use") { authError("Akun sudah terdaftar. Silakan masuk, atau pakai Atur ulang kode bila lupa."); }
+                else { authError("Gagal membuat akun: " + ((e2 && e2.code) || "coba lagi")); }
+                authBusy = false; return;
+              }
+              showToast("Akun berhasil dibuat. Selamat bergabung, " + tcName(m.name) + "!");
+            } else {
+              // atur ulang: masuk sesi sementara -> ganti kata sandi -> keluar
+              try { await FB.logout(); } catch (e3) {}
+              try {
+                await FB.signup(FB.email(m.no), codeIn);
+                await FB.chpw(codeIn, codeIn);
+              } catch (e4) {
+                try { await FB.logout(); } catch (e5) {}
+                authError("Akun lama masih terdaftar, jadi kode tidak bisa diatur ulang dari sini. Minta Ketua Kelas menghapus akun lama kamu di Firebase, lalu daftar lagi.");
+                authBusy = false; return;
+              }
+              showToast("Kode akses diatur ulang. Silakan masuk dengan kode baru.");
+            }
+            document.getElementById("loginCode").value = "";
+            document.getElementById("loginCode2").value = "";
+          }
+        } catch (err) {
+          if (authMode === "login") {
+            if (err && err.code === "auth/network-request-failed") authError("Tidak ada koneksi internet.");
+            else authError("Nama atau kode akses salah, atau akun belum terdaftar.");
+          } else {
+            authError("Gagal: " + ((err && err.code) || "coba lagi"));
+          }
         }
-        err.classList.remove("show");
-        currentUser = match;
-        document.getElementById("greetingName").textContent = match.name.toUpperCase();
-        document.getElementById("greetingRole").textContent = match.role;
-        document.getElementById("sayaSub").textContent = match.name.toUpperCase() + " · " + match.role;
+        authBusy = false;
+      });
+
+      function applySession(u) {
+        if (!u || !u.email) { return; }
+        var no = parseInt(String(u.email).split("@")[0].slice(1), 10);
+        var b = memByNo(no);
+        if (!b) return;
+        ME = { no: no, name: tcName(b.name) };
+        isAdmin = (FB.admins || []).indexOf(no) >= 0;
+        currentUser = { name: ME.name, role: isAdmin ? "Ketua Kelas" : "Anggota Kelas" };
+        document.getElementById("greetingName").textContent = b.name;
+        document.getElementById("greetingRole").textContent = isAdmin ? "Ketua Kelas" : "Anggota Kelas 01IKOK005";
+        document.getElementById("sayaSub").textContent = b.name + " · " + (isAdmin ? "Ketua Kelas" : "Anggota");
+        var tplItem = document.getElementById("menuTplItem");
+        if (tplItem) tplItem.style.display = isAdmin ? "" : "none";
+        var cr = document.getElementById("catatRow");
+        if (cr) cr.hidden = !isAdmin;
         document.getElementById("loginView").hidden = true;
         document.getElementById("appView").hidden = false;
         window.scrollTo({ top: 0 });
-        showToast("Selamat malam, " + match.name + " (" + match.role + ").");
-      });
-      document.getElementById("loginName").addEventListener("input", function () {
-        document.getElementById("loginError").classList.remove("show");
-      });
-      document.getElementById("loginCode").addEventListener("input", function () {
-        document.getElementById("loginError").classList.remove("show");
-      });
+        subscribeData();
+        refreshAll();
+      }
+      function clearSession() {
+        ME = null; isAdmin = false; currentUser = null;
+        document.getElementById("appView").hidden = true;
+        document.getElementById("loginView").hidden = false;
+        document.getElementById("loginCode").value = "";
+        setAuthMode("login");
+        document.querySelectorAll(".nav-btn").forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-page") === "beranda"); });
+        document.querySelectorAll(".page").forEach(function (p) { p.classList.toggle("active", p.id === "page-beranda"); });
+        window.scrollTo({ top: 0 });
+      }
       document.querySelectorAll("[data-logout]").forEach(function (btn) {
         btn.addEventListener("click", function () {
-          currentUser = null;
-          document.getElementById("appView").hidden = true;
-          document.getElementById("loginView").hidden = false;
-          document.getElementById("loginCode").value = "";
-          document.getElementById("loginError").classList.remove("show");
-          // kembali ke Beranda untuk sesi berikutnya
-          document.querySelectorAll(".nav-btn").forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-page") === "beranda"); });
-          document.querySelectorAll(".page").forEach(function (p) { p.classList.toggle("active", p.id === "page-beranda"); });
-          window.scrollTo({ top: 0 });
+          if (FB && FB.ready) { FB.logout().catch(function () {}); }
+          clearSession();
         });
       });
 
+      // ---------- catat transaksi (khusus admin) ----------
+      var catatType = "in";
+      var KAT = { "in": ["Kas Kelas", "Kolektif Seminar", "Lainnya"], "out": ["Kas Kelas", "Kolektif Seminar", "Lainnya"] };
+      function actFundKey() { return (typeof currentFund !== "undefined" && currentFund === "seminar") ? "seminar" : "kas"; }
+      function openCatat(type) {
+        catatType = type;
+        var fk = actFundKey(), fd = FUND_DEF[fk];
+        document.getElementById("catatTitle").textContent = (type === "in" ? "Catat pemasukan" : "Catat pengeluaran") + " · " + fd.label;
+        document.getElementById("catatMemberField").hidden = type !== "in";
+        var memSel = document.getElementById("catatMember");
+        memSel.innerHTML = '<option value="0">Umum / lainnya</option>' + MEMBERS_BASE.map(function (b) {
+          return '<option value="' + b.no + '">' + tcName(b.name) + '</option>';
+        }).join("");
+        var katSel = document.getElementById("catatKat");
+        var defKat = fk === "kas" ? "Kas Kelas" : "Kolektif Seminar";
+        katSel.innerHTML = KAT[type].map(function (k) { return '<option' + (k === defKat ? ' selected' : '') + '>' + k + '</option>'; }).join("");
+        document.getElementById("catatAmount").value = type === "in" ? (DB[MOD_OF[fk]].target || fd.iuran) : "";
+        document.getElementById("catatDate").value = new Date().toISOString().slice(0, 10);
+        document.getElementById("catatNote").value = "";
+        document.getElementById("catatOverlay").classList.add("open");
+      }
+      function closeCatat() { document.getElementById("catatOverlay").classList.remove("open"); }
+      document.getElementById("catatIn").addEventListener("click", function () { openCatat("in"); });
+      document.getElementById("catatOut").addEventListener("click", function () { openCatat("out"); });
+      document.getElementById("catatCancel").addEventListener("click", closeCatat);
+      document.getElementById("catatOverlay").addEventListener("click", function (e) { if (e.target === this) closeCatat(); });
+      document.getElementById("catatForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!isAdmin) { showToast("Hanya Ketua Kelas yang boleh mencatat data."); return; }
+        var a = parseInt(document.getElementById("catatAmount").value, 10);
+        if (!a || a <= 0) { document.getElementById("catatAmount").focus(); return; }
+        var fk = actFundKey(), modKey = MOD_OF[fk];
+        DB[modKey].tx.push({
+          id: Date.now().toString(36),
+          t: catatType,
+          k: document.getElementById("catatKat").value,
+          d: document.getElementById("catatDate").value || new Date().toISOString().slice(0, 10),
+          m: catatType === "in" ? parseInt(document.getElementById("catatMember").value, 10) : 0,
+          a: a,
+          n: document.getElementById("catatNote").value.trim()
+        });
+        saveFund(modKey);
+        closeCatat();
+        refreshAll();
+        showToast("Transaksi tersimpan ke Firebase.");
+      });
+
+      // ---------- halaman Saya: ganti kode & template WA ----------
+      document.getElementById("menuChpw").addEventListener("click", async function () {
+        if (!FB || !FB.ready || !ME) return;
+        var oldPw = window.prompt("Kode akses saat ini:");
+        if (oldPw === null) return;
+        var newPw = window.prompt("Kode akses baru (min. 6 karakter):");
+        if (newPw === null) return;
+        if (newPw.length < 6) { showToast("Kode akses minimal 6 karakter."); return; }
+        try {
+          await FB.chpw(oldPw, newPw);
+          showToast("Kode akses kamu diganti.");
+        } catch (e) {
+          showToast("Kode akses saat ini salah atau gagal diganti.");
+        }
+      });
+      var tplFundKey = "kas";
+      document.getElementById("menuTpl").addEventListener("click", function () {
+        tplFundKey = actFundKey();
+        document.getElementById("tplTitle").textContent = "Template WhatsApp · " + FUND_DEF[tplFundKey].label;
+        document.getElementById("tplText").value = DB[MOD_OF[tplFundKey]].tpl || TPL_DEFAULT[tplFundKey];
+        document.getElementById("tplOverlay").classList.add("open");
+      });
+      function closeTpl() { document.getElementById("tplOverlay").classList.remove("open"); }
+      document.getElementById("tplCancel").addEventListener("click", closeTpl);
+      document.getElementById("tplOverlay").addEventListener("click", function (e) { if (e.target === this) closeTpl(); });
+      document.getElementById("tplSave").addEventListener("click", function () {
+        if (!isAdmin) { showToast("Hanya Ketua Kelas yang boleh mengubah template."); return; }
+        var v = document.getElementById("tplText").value.trim();
+        var modKey = MOD_OF[tplFundKey];
+        DB[modKey].tpl = (v && v !== TPL_DEFAULT[tplFundKey]) ? v : "";
+        saveFund(modKey);
+        closeTpl();
+        showToast("Template disimpan.");
+      });
+
+
       // ---------- ANGGOTA & WHATSAPP ----------
       var WA_ICON = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413"/></svg>';
-      function statusTagHTML(fund) {
+      function statusTagHTML(fund, fundKey) {
+        var target = DB[MOD_OF[fundKey]].target || FUND_DEF[fundKey].iuran;
         if (fund.status === "LUNAS") return '<span class="tag-lunas">LUNAS</span>';
-        if (fund.status === "KURANG") return '<span class="tag-kurang-sm">KURANG ' + rp(FUND_DEF.seminar.iuran - fund.paid) + '</span>';
+        if (fund.status === "KURANG") return '<span class="tag-kurang-sm">KURANG ' + rp(target - fund.paid) + '</span>';
         return '<span class="tag-belum">BELUM</span>';
       }
       function renderAnggota() {
+        var sub = document.getElementById("memberFundSub");
+        if (sub) sub.textContent = "Kas Kelas " + rp(DB.kelas.target || FUND_DEF.kas.iuran) + " · Dana Seminar " + rp(DB.seminar.target || FUND_DEF.seminar.iuran);
         var el = document.getElementById("memberList");
         if (!el) return;
         el.innerHTML = MEMBERS.map(function (m, idx) {
@@ -1559,27 +1914,33 @@
           return '<li>' +
             '<span class="avatar' + (isPaidAny ? ' red' : '') + '">' + initials(m.name) + '</span>' +
             '<span class="who"><span class="nm">' + m.name + '</span>' +
-            '<span class="member-status"><span class="fund-name">Kas Kelas</span>' + statusTagHTML(m.kas) +
-            '<span class="fund-name">· Dana Seminar</span>' + statusTagHTML(m.seminar) + '</span></span>' +
+            '<span class="member-status"><span class="fund-name">Kas Kelas</span>' + statusTagHTML(m.kas, "kas") +
+            '<span class="fund-name">· Dana Seminar</span>' + statusTagHTML(m.seminar, "seminar") + '</span></span>' +
             '<button type="button" class="wa-btn" data-wa="' + idx + '" aria-label="Kirim WhatsApp ke ' + m.name + '" title="WhatsApp — ' + m.name + '">' + WA_ICON + '</button>' +
           '</li>';
         }).join("");
       }
-      function waReminderMessage(member, fundDef, fund) {
-        var shortfall = fundDef.iuran - fund.paid;
-        var kekurangan = shortfall > 0 ? rp(shortfall) : "-";
-        return "Halo " + member.name + ",\n" +
-          "Pengingat iuran " + fundDef.label + " MOODBOARD CK05.\n\n" +
-          "Iuran: " + rp(fundDef.iuran) + "\n" +
-          "Sudah dibayar: " + rp(fund.paid) + "\n" +
-          "Kekurangan: " + kekurangan + "\n\n" +
-          "Mohon dilunasi ya. Pembayaran bisa langsung ke ketua kelas. Jika sudah membayar, abaikan pesan ini.\n\n" +
-          "Terima kasih.\n" +
-          "Arif Hidayat, Ketua Kelas CK05";
+      var TPL_DEFAULT = {
+        kas: "Halo {nama},\nPengingat iuran Kas Kelas MOODBOARD CK05.\n\nIuran: {target}\nSudah dibayar: {dibayar}\nKekurangan: {kurang}\n\nMohon dilunasi ya. Pembayaran bisa langsung ke ketua kelas. Jika sudah membayar, abaikan pesan ini.\n\nTerima kasih.\nArif Hidayat, Ketua Kelas CK05",
+        seminar: "Halo {nama},\nPengingat iuran Dana Seminar MOODBOARD CK05.\n\nIuran: {target}\nSudah dibayar: {dibayar}\nKekurangan: {kurang}\n\nMohon dilunasi ya. Pembayaran bisa langsung ke ketua kelas. Jika sudah membayar, abaikan pesan ini.\n\nTerima kasih.\nArif Hidayat, Ketua Kelas CK05"
+      };
+      var TPL_LUNAS = "Halo {nama}, terima kasih. Iuran {saku} Anda sudah lunas ({dibayar}).";
+      function waMessageFor(member, fundKey) {
+        var fd = FUND_DEF[fundKey], st = member[fundKey];
+        var target = DB[MOD_OF[fundKey]].target || 0;
+        var F = {
+          nama: member.name,
+          target: target ? rp(target) : "(belum ditetapkan)",
+          dibayar: rp(st.paid),
+          kurang: target ? rp(Math.max(0, target - st.paid)) : "-",
+          saku: fd.label,
+          bendahara: ME ? ME.name : "Ketua Kelas"
+        };
+        var tpl = st.status === "LUNAS" ? TPL_LUNAS : (DB[MOD_OF[fundKey]].tpl || TPL_DEFAULT[fundKey]);
+        return tpl.replace(/\{(\w+)\}/g, function (mm, k) { return F[k] !== undefined ? F[k] : mm; });
       }
-      function waThanksMessage(member, fundDef) {
-        return "Halo " + member.name + ", terima kasih. Iuran " + fundDef.label + " Anda sudah lunas (" + rp(fundDef.iuran) + ").";
-      }
+      function waReminderMessage(member, fundDef, fund) { return waMessageFor(member, fundDef.key); }
+      function waThanksMessage(member, fundDef) { return waMessageFor(member, fundDef.key); }
       function waActionsFor(member) {
         var actions = [];
         [["kas", FUND_DEF.kas, member.kas], ["seminar", FUND_DEF.seminar, member.seminar]].forEach(function (triple) {
@@ -1608,7 +1969,7 @@
         waCurrentMember = member;
         waCurrentActions = waActionsFor(member);
         document.getElementById("waTitle").textContent = member.name;
-        document.getElementById("waSub").textContent = "Kas Kelas: " + member.kas.status + " · Dana Seminar: " + member.seminar.status + (member.seminar.status === "KURANG" ? " (kurang " + rp(FUND_DEF.seminar.iuran - member.seminar.paid) + ")" : "") + ". Pilihan di bawah hanya yang sesuai status anggota ini.";
+        document.getElementById("waSub").textContent = "Kas Kelas: " + member.kas.status + " · Dana Seminar: " + member.seminar.status + (member.seminar.status === "KURANG" ? " (kurang " + rp((DB.seminar.target || FUND_DEF.seminar.iuran) - member.seminar.paid) + ")" : "") + ". Pilihan di bawah hanya yang sesuai status anggota ini.";
         document.getElementById("waOptions").innerHTML = waCurrentActions.map(function (a, i) {
           return '<button type="button" class="wa-option" data-wa-opt="' + i + '"><span>' + a.label + '</span><span class="wa-opt-kind">' + a.kindLabel + '</span></button>';
         }).join("");
@@ -1631,12 +1992,27 @@
       waOverlay.addEventListener("click", function (e) { if (e.target === waOverlay) closeWa(); });
       document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeWa(); });
 
-      // ---------- render awal ----------
+      // ---------- render awal & boot Firebase ----------
+      computeDerived();
       renderBeranda();
       renderTx();
       renderReport();
       renderReportLists();
       renderAnggota();
+
+      function bootKasboard() {
+        FB = window.FBX;
+        if (!FB || !FB.ready) {
+          authError("Firebase belum siap. Isi/periksa firebase-config.js dan koneksi internet, lalu muat ulang.");
+          return;
+        }
+        FB.onAuth(function (u) {
+          if (u) applySession(u); else clearSession();
+        });
+      }
+      if (window.FBX) bootKasboard();
+      else window.addEventListener("fbready", bootKasboard, { once: true });
     </script>
+
   </body>
 </html>
