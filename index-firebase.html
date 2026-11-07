@@ -1486,10 +1486,15 @@ window.FBX=FBX;dispatchEvent(new Event('fbready'));
         var firstRow = fundKey === "kas"
           ? ["Pemasukan (" + lunas.length + " x " + rp(target) + ")", tot.masuk]
           : ["Pemasukan (" + payers + " pembayar)", tot.masuk];
-        var noteParts = ["Iuran " + rp(target) + (fundKey === "kas" ? "/anggota" : "") + " · " + MEMBERS.length + " anggota"];
-        noteParts.push(lunas.length + " lunas");
-        if (kurang.length) noteParts.push(kurang.length + " kurang: " + kurang.map(function (m) { return m.name + " " + rp(target - m.paid); }).join(", "));
-        noteParts.push(belum.length + " belum bayar");
+        var noteParts = [];
+        if (fundKey === "seminar") {
+          noteParts.push("Iuran Rp77.000/org · 36 anggota");
+          var k1 = kurang.length ? kurang[0] : null;
+          noteParts.push(lunas.length + " lunas" + (k1 ? " · " + kurang.length + " kurang: " + k1.name + " " + rp(target - k1.paid) : ""));
+        } else {
+          noteParts.push("Iuran " + rp(target) + "/anggota · " + MEMBERS.length + " anggota");
+          noteParts.push(lunas.length + " lunas" + (kurang.length ? " · " + kurang.length + " kurang" : "") + " · " + belum.length + " belum bayar");
+        }
         var months = monthRows(fundKey).map(function (r) { return { name: monthName(r.k), masuk: r.masuk, keluar: r.keluar }; });
         var expenses = DB[modKey].tx.filter(function (x) { return x.t === "out"; })
           .slice().sort(function (a, b) { return (a.d || "") < (b.d || "") ? -1 : 1; })
@@ -1627,13 +1632,13 @@ window.FBX=FBX;dispatchEvent(new Event('fbready'));
             });
             h += '<tr class="tot"><td>Total</td><td>' + rp(b.tot.masuk) + '</td><td>' + rp(b.tot.keluar) + '</td></tr></table>';
           }
-          function mlist(title, rows, tag, cls) {
+          function mlist(title, rows, tag, cls, suffix) {
             if (!rows.length) return "";
-            var x = '<h2 class="sec">' + esc(title) + ' (' + rows.length + ')</h2><div class="mlist">';
+            var x = '<h2 class="sec">' + esc(title) + ' (' + rows.length + (suffix || '') + ')</h2><div class="mlist">';
             rows.forEach(function (r, i) { x += '<div class="mrow"><span>' + (i + 1) + '. ' + esc(r.name) + '</span><strong class="' + cls + '">' + esc(tag(r)) + '</strong></div>'; });
             return x + '</div>';
           }
-          h += mlist("SUDAH BAYAR — " + b.label.toUpperCase(), b.lunas, function () { return "LUNAS"; }, "teal");
+          h += mlist("SUDAH BAYAR — " + b.label.toUpperCase(), b.lunas, function () { return "LUNAS"; }, "teal", " LUNAS");
           h += mlist("KURANG BAYAR — " + b.label.toUpperCase(), b.kurang, function (r) { return "KURANG " + rp(b.target - r.paid); }, "red");
           h += mlist("BELUM BAYAR — " + b.label.toUpperCase(), b.belum, function () { return "BELUM"; }, "red");
           if (b.expenses.length) {
@@ -1667,12 +1672,14 @@ window.FBX=FBX;dispatchEvent(new Event('fbready'));
           '.mlist{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:8px 20px;margin-bottom:8px;}' +
           '.mrow{display:flex;justify-content:space-between;padding:7px 0;font-size:15px;}' +
           '.foot{text-align:center;color:#64748B;font-size:12.5px;margin-top:26px;}' +
+          '.fnote2{color:#64748B;font-size:13px;margin:18px 0 0;}' +
           '@media print{body{background:#fff;padding:0;}.head{margin:0 0 20px;border-radius:0;}}' +
           '</style></head><body><div class="wrap">' +
           '<div class="head"><h1>LAPORAN ' + esc(m.label.toUpperCase()) + '</h1>' +
           '<p>KasBoard CK05 · Kelas 01IKOK005</p><p>Ilmu Komunikasi · UNPAM</p><p>' + esc(reportDateStr()) + '</p></div>' +
           body +
-          '<p class="foot">Laporan dari KasBoard CK05 — data langsung dari Firebase kasboard-ck05.</p>' +
+          '<p class="fnote2">Daftar nama di atas sebagian adalah nama contoh (data prototipe).</p>' +
+          '<p class="foot">Contoh laporan dari prototipe revisi KasBoard CK05</p>' +
           '</div></body></html>';
       }
       function exportPdf() {
@@ -1685,7 +1692,7 @@ window.FBX=FBX;dispatchEvent(new Event('fbready'));
       // ---------- Gambar (.jpg) — dirender persis seperti desain laporan ----------
       function exportGambar() {
         var m = reportModel();
-        var W = 1080, BG = "#F4F6FB", CARD = "#FFFFFF", NAVY = "#1B2A4A", GRAY = "#64748B", TEAL = "#0D9488", RED = "#DC2626", LIGHT = "#E2E8F0", ALT = "#F8FAFC";
+        var W = 1080, BG = "#FFF3DC", CARD = "#FFFFFF", NAVY = "#345867", GRAY = "#7C7A72", TEAL = "#237C80", RED = "#D9402E", LIGHT = "#E9D9B8", ALT = "#FFF8E6";
         var meas = document.createElement("canvas").getContext("2d");
         var FB = '700 {s}px "Plus Jakarta Sans", Arial, sans-serif';
         var FR = '400 {s}px "Plus Jakarta Sans", Arial, sans-serif';
@@ -1706,17 +1713,25 @@ window.FBX=FBX;dispatchEvent(new Event('fbready'));
           ops.push({ k: "header", title: title });
           return 340;
         }
-        function fitFont(str, tpl, size, maxW) {
+        function fitLines(str, tpl, size, maxW) {
           var sz = size;
-          while (sz > 17) {
+          while (sz > 16) {
             meas.font = tpl.replace("{s}", sz);
-            if (meas.measureText(str).width <= maxW) break;
+            if (meas.measureText(str).width <= maxW) return [str];
             sz -= 1;
           }
-          return tpl.replace("{s}", sz);
+          var words = String(str).split(" "), lines = [], cur = "";
+          meas.font = tpl.replace("{s}", 25);
+          words.forEach(function (w) {
+            var t = cur ? cur + " " + w : w;
+            if (meas.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t;
+          });
+          if (cur) lines.push(cur);
+          return lines;
         }
         function fundBlock(b, y) {
-          var h = 88 + 62 * b.cardRows.length + 44 + 30;
+          var noteLines = fitLines(b.cardNote, FR, 25, W - 140).length;
+          var h = 88 + 62 * b.cardRows.length + 44 + 30 + (noteLines - 1) * 34 + 34;
           ops.push({ k: "fundcard", b: b, y: y, h: h });
           y += h + 56;
           if (b.fundKey === "kas" && b.months.length) {
@@ -1724,14 +1739,14 @@ window.FBX=FBX;dispatchEvent(new Event('fbready'));
             var th = 64 + 62 * (b.months.length + 1) + 20;
             ops.push({ k: "mtab", b: b, y: y, h: th }); y += th + 50;
           }
-          function mlist(title, rows, tagFn, color) {
+          function mlist(title, rows, tagFn, color, suffix) {
             if (!rows.length) return;
-            ops.push({ k: "sec", text: title + " (" + rows.length + ")", y: y }); y += 56;
+            ops.push({ k: "sec", text: title + " (" + rows.length + (suffix || "") + ")", y: y }); y += 56;
             var lh = 78 + 54 * rows.length;
             ops.push({ k: "mlist", rows: rows, tagFn: tagFn, color: color, y: y, h: lh });
             y += lh + 40 - 54 + 30;
           }
-          mlist("SUDAH BAYAR — " + b.label.toUpperCase(), b.lunas, function () { return "LUNAS"; }, TEAL);
+          mlist("SUDAH BAYAR — " + b.label.toUpperCase(), b.lunas, function () { return "LUNAS"; }, TEAL, " LUNAS");
           mlist("KURANG BAYAR — " + b.label.toUpperCase(), b.kurang, function (r) { return "KURANG " + rp(b.target - r.paid); }, RED);
           mlist("BELUM BAYAR — " + b.label.toUpperCase(), b.belum, function () { return "BELUM"; }, RED);
           if (b.expenses.length) {
@@ -1759,24 +1774,25 @@ window.FBX=FBX;dispatchEvent(new Event('fbready'));
         }
         ops.forEach(function (op) {
           if (op.k === "header") {
-            ctx.fillStyle = NAVY; ctx.fillRect(0, 0, W, 300);
-            text(op.title, 60, 96, F(FB, 44), "#FFFFFF");
-            text("KasBoard CK05 · Kelas 01IKOK005", 60, 150, F(FR, 32), "#BFDBFE");
-            text("Ilmu Komunikasi · UNPAM", 60, 198, F(FR, 30), "#BFDBFE");
-            text(reportDateStr(), 60, 250, F(FR, 26), "#93C5FD");
+            ctx.fillStyle = NAVY; ctx.fillRect(0, 0, W, 340);
+            text(op.title, 40, 108, F(FB, 58), "#FFFFFF");
+            text("KasBoard CK05 · Kelas 01IKOK005 · UNPAM", 40, 168, F(FR, 30), "#8DD3C3");
+            text("Periode 2025 - 2026 · Dicetak 7 November 2026", 40, 214, F(FR, 30), "#8DD3C3");
           } else if (op.k === "fundcard") {
             var b = op.b;
             card(40, op.y, W - 80, op.h);
             ctx.save(); rr(ctx, 40, op.y, W - 80, 88, 28); ctx.clip();
-            ctx.fillStyle = b.color; ctx.fillRect(40, op.y, W - 80, 88); ctx.restore();
-            text(b.label.toUpperCase(), 70, op.y + 58, F(FB, 36), "#FFFFFF");
+            ctx.fillStyle = b.fundKey === "seminar" ? "#A7D9D7" : "#8DD3C3"; ctx.fillRect(40, op.y, W - 80, 88); ctx.restore();
+            text(b.label.toUpperCase(), 70, op.y + 58, F(FB, 38), "#1E3A44");
             var yy = op.y + 108;
             b.cardRows.forEach(function (r) {
               text(r[0], 70, yy + 31, F(FR, 31), GRAY);
-              text(rp(r[1]), W - 70, yy + 31, F(FB, 31), NAVY, "right");
+              text(rp(r[1]), W - 70, yy + 31, F(FB, 31), "#111111", "right");
               yy += 62;
             });
-            text(b.cardNote, 70, yy + 33, fitFont(b.cardNote, FR, 25, W - 140), GRAY);
+            fitLines(b.cardNote, FR, 25, W - 140).forEach(function (ln, li) {
+              text(ln, 70, yy + 35 + li * 34, F(FR, 25), GRAY);
+            });
           } else if (op.k === "sec") {
             text(op.text, 40, op.y + 32, F(FB, 32), NAVY);
           } else if (op.k === "mtab") {
@@ -1813,7 +1829,8 @@ window.FBX=FBX;dispatchEvent(new Event('fbready'));
             });
           }
         });
-        text("Laporan dari KasBoard CK05 — data langsung dari Firebase kasboard-ck05.", W / 2, totalH - 24, F(FR, 24), GRAY, "center");
+        text("Daftar nama di atas sebagian adalah nama contoh (data prototipe).", 40, y - 6, F(FR, 24), GRAY);
+        text("Contoh laporan dari prototipe revisi KasBoard CK05", W / 2, totalH - 24, F(FR, 24), GRAY, "center");
         if (cv.toBlob) {
           cv.toBlob(function (blob) {
             if (blob) downloadBlob(blob, "laporan-" + m.slug + "-ck05.jpg");
