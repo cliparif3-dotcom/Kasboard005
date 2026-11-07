@@ -3,7 +3,7 @@
  "short_name": "KasBoard",
  "description": "Aplikasi kas kelas MOODBOARD CK05: iuran, dana seminar, dan laporan keuangan.",
  "lang": "id",
- "start_url": "./index-firebase.html",
+ "start_url": "./index.html",
  "scope": "./",
  "display": "standalone",
  "orientation": "portrait",

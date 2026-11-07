@@ -1,0 +1,2018 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>KasBoard CK05</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#108ee9" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #edf1ef;
+        --surface: #ffffff;
+        --surface-2: #f4f7f5;
+        --ink: #15211c;
+        --ink-2: #4c5d55;
+        --ink-3: #7d8f86;
+        --line: #dde5e1;
+        --accent: #0c6b5d;
+        --accent-soft: #e2f1ed;
+        --accent-ink: #ffffff;
+        --green: #177245;
+        --green-soft: #e4f3ea;
+        --red: #c0362c;
+        --red-soft: #faeae8;
+        --amber: #9a6700;
+        --amber-soft: #fdf1d7;
+        --badge-bg: #15211c;
+        --badge-ink: #ffd97a;
+        --shadow: 0 1px 2px rgba(21, 33, 28, .05), 0 6px 18px rgba(21, 33, 28, .05);
+        --nav-bg: rgba(255, 255, 255, .96);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0d1311;
+          --surface: #17211d;
+          --surface-2: #1e2a25;
+          --ink: #e9f1ed;
+          --ink-2: #a9bcb2;
+          --ink-3: #7e938a;
+          --line: #2a3831;
+          --accent: #2ea88f;
+          --accent-soft: #123129;
+          --green: #4cc38a;
+          --green-soft: #14301f;
+          --red: #f0837a;
+          --red-soft: #3a1d1a;
+          --amber: #e5b84f;
+          --amber-soft: #33270d;
+          --badge-bg: #e9f1ed;
+          --badge-ink: #7a5b00;
+          --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 18px rgba(0, 0, 0, .25);
+          --nav-bg: rgba(23, 33, 29, .96);
+        }
+      }
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        font-size: 15px;
+        line-height: 1.45;
+      }
+      .app {
+        max-width: 480px;
+        margin: 0 auto;
+        padding: 16px 16px 108px;
+      }
+      /* ---------- badge info ---------- */
+      .proto-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: var(--badge-bg);
+        color: var(--badge-ink);
+        font-size: 11.5px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        padding: 8px 12px;
+        border-radius: 999px;
+        margin-bottom: 14px;
+        text-align: center;
+      }
+      .proto-badge .dot {
+        width: 7px; height: 7px; border-radius: 50%;
+        background: var(--badge-ink); flex: none;
+      }
+      /* ---------- header ---------- */
+      .greeting { margin: 2px 2px 16px; }
+      .greeting .halo { color: var(--ink-2); font-size: 14px; font-weight: 500; }
+      .greeting h1 {
+        margin: 2px 0 4px;
+        font-size: 24px; font-weight: 800; letter-spacing: .01em;
+      }
+      .greeting .meta { color: var(--ink-2); font-size: 13px; }
+      .greeting .meta strong { color: var(--ink); font-weight: 700; }
+      /* ---------- kartu umum ---------- */
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 16px;
+        margin-bottom: 14px;
+      }
+      .card h2 {
+        margin: 0 0 12px;
+        font-size: 15px; font-weight: 700;
+        display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      }
+      .card h2 .sub { font-size: 12px; font-weight: 500; color: var(--ink-3); }
+      /* ---------- pemindah dana ---------- */
+      .fund-switch {
+        display: grid; grid-template-columns: 1fr 1fr 1fr;
+        background: var(--surface-2);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 4px;
+        gap: 4px;
+        margin-bottom: 14px;
+      }
+      .fund-switch button {
+        appearance: none; border: 0; cursor: pointer;
+        background: transparent; color: var(--ink-2);
+        font: inherit; font-size: 13.5px; font-weight: 700;
+        padding: 9px 4px; border-radius: 9px;
+      }
+      .fund-switch button.active {
+        background: var(--accent); color: var(--accent-ink);
+        box-shadow: 0 2px 8px rgba(12, 107, 93, .3);
+      }
+      .fund-switch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+      /* ---------- saldo ---------- */
+      .saldo-card {
+        background: var(--accent);
+        border: 0;
+        color: #fff;
+      }
+      .saldo-card .label { font-size: 13px; font-weight: 600; opacity: .85; }
+      .saldo-card .amount {
+        font-size: 34px; font-weight: 800; letter-spacing: -.01em;
+        margin: 2px 0 14px; font-variant-numeric: tabular-nums;
+      }
+      .saldo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .saldo-mini {
+        background: rgba(255, 255, 255, .14);
+        border-radius: 12px; padding: 10px 12px;
+      }
+      .saldo-mini .k { font-size: 12px; font-weight: 600; opacity: .85; display: flex; align-items: center; gap: 6px; }
+      .saldo-mini .v { font-size: 16.5px; font-weight: 800; margin-top: 2px; font-variant-numeric: tabular-nums; }
+      /* ---------- baris info ---------- */
+      .info-rows { display: grid; gap: 0; }
+      .info-row {
+        display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+        padding: 8px 0; border-bottom: 1px dashed var(--line);
+      }
+      .info-row:last-child { border-bottom: 0; padding-bottom: 0; }
+      .info-row:first-child { padding-top: 0; }
+      .info-row .k { color: var(--ink-2); font-size: 13.5px; }
+      .info-row .v { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+      /* ---------- status iuran ---------- */
+      .progress {
+        height: 10px; border-radius: 999px;
+        background: var(--surface-2); overflow: hidden; margin: 4px 0 12px;
+        border: 1px solid var(--line);
+      }
+      .progress > div { height: 100%; background: var(--accent); border-radius: 999px; transition: width .3s ease; }
+      .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .stat-box { background: var(--surface-2); border-radius: 12px; padding: 12px; text-align: center; }
+      .stat-box .n { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+      .stat-box .t { font-size: 12.5px; color: var(--ink-2); font-weight: 600; margin-top: 1px; }
+      .stat-box.ok .n { color: var(--green); }
+      .stat-box.warn .n { color: var(--red); }
+      /* ---------- daftar nama ---------- */
+      .name-list { list-style: none; margin: 0; padding: 0; }
+      .name-list li {
+        display: flex; align-items: center; gap: 10px;
+        padding: 9px 0; border-bottom: 1px solid var(--line);
+      }
+      .name-list li:last-child { border-bottom: 0; padding-bottom: 2px; }
+      .avatar {
+        width: 34px; height: 34px; border-radius: 50%; flex: none;
+        background: var(--accent-soft); color: var(--accent);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 12.5px; font-weight: 800;
+      }
+      .avatar.red { background: var(--red-soft); color: var(--red); }
+      .name-list .who { flex: 1; min-width: 0; }
+      .name-list .who .nm { font-weight: 600; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .name-list .who .dt { font-size: 12.5px; color: var(--ink-3); }
+      .name-list .amt { font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .amt.in { color: var(--green); }
+      .amt.out { color: var(--red); }
+      .tag-kurang {
+        font-size: 11px; font-weight: 800; color: var(--amber);
+        background: var(--amber-soft); border-radius: 999px; padding: 3px 8px; white-space: nowrap;
+      }
+      .tag-lunas {
+        font-size: 11px; font-weight: 800; color: var(--green);
+        background: var(--green-soft); border-radius: 999px; padding: 3px 9px; white-space: nowrap; letter-spacing: .03em;
+      }
+      .tag-belum {
+        font-size: 11px; font-weight: 800; color: var(--red);
+        background: var(--red-soft); border-radius: 999px; padding: 3px 9px; white-space: nowrap; letter-spacing: .03em;
+      }
+      .fineprint { font-size: 12px; color: var(--ink-3); margin-top: 10px; }
+      /* ---------- bayar iuran QRIS ---------- */
+      .qris-card { text-align: center; }
+      .qris-card h2 { justify-content: center; text-align: center; }
+      .qris-qr-btn {
+        appearance: none; cursor: pointer; display: block;
+        margin: 2px auto 12px; padding: 14px;
+        background: #ffffff; border: 1px solid var(--line); border-radius: 16px;
+        line-height: 0; max-width: 100%;
+      }
+      .qris-qr-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+      .qris-qr-btn:active { transform: scale(.99); }
+      .qris-qr-btn img {
+        width: 248px; max-width: 68vw; height: auto; display: block;
+      }
+      .qris-tap-hint { font-size: 12px; color: var(--ink-3); font-weight: 600; margin: -4px 0 12px; }
+      .qris-merchant { font-size: 14.5px; font-weight: 700; color: var(--ink); margin: 0 0 6px; }
+      .qris-merchant span { color: var(--ink-2); font-weight: 600; }
+      .qris-helper { font-size: 13.5px; color: var(--ink-2); margin: 0 auto; max-width: 340px; line-height: 1.55; }
+      .qris-helper strong { color: var(--ink); font-weight: 700; }
+      .qris-dialog { text-align: center; }
+      .qris-dialog .qris-qr-large {
+        display: block; margin: 4px auto 14px; padding: 16px;
+        background: #ffffff; border: 1px solid var(--line); border-radius: 16px; line-height: 0;
+      }
+      .qris-dialog .qris-qr-large img {
+        width: 400px; max-width: 78vw; height: auto; display: block; margin: 0 auto;
+      }
+      .qris-dialog .dialog-actions { grid-template-columns: 1fr; }
+      /* ---------- anggota & WhatsApp ---------- */
+      .member-list { list-style: none; margin: 0; padding: 0; }
+      .member-list li {
+        display: flex; align-items: flex-start; gap: 10px;
+        padding: 11px 0; border-bottom: 1px solid var(--line);
+      }
+      .member-list li:last-child { border-bottom: 0; padding-bottom: 2px; }
+      .member-list .who { flex: 1; min-width: 0; }
+      .member-list .who .nm { font-weight: 600; font-size: 14.5px; }
+      .member-status { display: flex; flex-wrap: wrap; gap: 5px 6px; margin-top: 5px; align-items: center; }
+      .member-status .fund-name { font-size: 12px; color: var(--ink-2); font-weight: 600; }
+      .tag-kurang-sm {
+        font-size: 10.5px; font-weight: 800; color: var(--amber);
+        background: var(--amber-soft); border-radius: 999px; padding: 2px 7px; white-space: nowrap;
+      }
+      .wa-btn {
+        appearance: none; border: 0; cursor: pointer; flex: none;
+        width: 40px; height: 40px; border-radius: 50%;
+        background: #1fa855; color: #ffffff;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 2px 8px rgba(31, 168, 85, .35);
+        margin-top: 1px;
+      }
+      .wa-btn:active { transform: scale(.96); }
+      .wa-btn:focus-visible { outline: 2px solid #1fa855; outline-offset: 2px; }
+      .wa-options { display: grid; gap: 8px; margin-bottom: 14px; }
+      .wa-option {
+        appearance: none; cursor: pointer; font: inherit; text-align: left;
+        display: flex; align-items: center; justify-content: space-between; gap: 10px;
+        padding: 12px 13px; border-radius: 12px;
+        border: 1.5px solid var(--line); background: var(--surface-2); color: var(--ink);
+        font-size: 14px; font-weight: 700; width: 100%;
+      }
+      .wa-option .wa-opt-kind { font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; }
+      .wa-option.active { border-color: #1fa855; background: var(--green-soft); }
+      .wa-option.active .wa-opt-kind { color: #1fa855; }
+      .wa-option:focus-visible { outline: 2px solid #1fa855; outline-offset: 2px; }
+      .wa-preview-label { font-size: 12px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: .05em; margin: 0 0 6px; }
+      .wa-preview {
+        white-space: pre-wrap; word-break: break-word;
+        background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px;
+        padding: 12px 13px; font-size: 13.5px; line-height: 1.55; color: var(--ink);
+        margin: 0 0 10px; max-height: 240px; overflow-y: auto;
+        font-family: inherit;
+      }
+      .wa-note { font-size: 12.5px; color: var(--ink-3); margin: 0 0 14px; line-height: 1.5; }
+      .btn-wa-open {
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        width: 100%; padding: 13px; border-radius: 12px;
+        background: #1fa855; color: #ffffff; text-decoration: none;
+        font-size: 15px; font-weight: 800; margin-bottom: 10px;
+      }
+      .btn-wa-open:active { transform: scale(.99); }
+      .btn-wa-open:focus-visible { outline: 2px solid #1fa855; outline-offset: 2px; }
+      /* ---------- halaman ---------- */
+      .page { display: none; }
+      .page.active { display: block; }
+      .page-title { font-size: 20px; font-weight: 800; margin: 2px 2px 4px; }
+      .page-sub { color: var(--ink-2); font-size: 13.5px; margin: 0 2px 16px; }
+      /* ---------- filter aktivitas ---------- */
+      .search-box { position: relative; margin-bottom: 10px; }
+      .search-box svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--ink-3); pointer-events: none; }
+      .search-box input {
+        width: 100%; font: inherit; font-size: 14.5px;
+        padding: 11px 12px 11px 38px;
+        border: 1px solid var(--line); border-radius: 12px;
+        background: var(--surface); color: var(--ink);
+      }
+      .search-box input:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+      .filter-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+      .filter-row select {
+        font: inherit; font-size: 13.5px; font-weight: 600;
+        padding: 9px 10px; border-radius: 10px;
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+        flex: 1; min-width: 140px;
+      }
+      .chip-group { display: flex; gap: 6px; }
+      .chip {
+        appearance: none; cursor: pointer; font: inherit;
+        font-size: 13px; font-weight: 700;
+        padding: 8px 13px; border-radius: 999px;
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink-2);
+      }
+      .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+      .list-count { font-size: 12.5px; color: var(--ink-3); margin: 0 2px 8px; }
+      /* ---------- baris transaksi ---------- */
+      .tx-list { list-style: none; margin: 0; padding: 0; }
+      .tx-row {
+        display: flex; align-items: center; gap: 10px;
+        background: var(--surface); border: 1px solid var(--line);
+        border-radius: 14px; padding: 11px 12px; margin-bottom: 8px;
+        box-shadow: var(--shadow);
+      }
+      .tx-ic {
+        width: 36px; height: 36px; border-radius: 10px; flex: none;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .tx-ic.in { background: var(--green-soft); color: var(--green); }
+      .tx-ic.out { background: var(--red-soft); color: var(--red); }
+      .tx-main { flex: 1; min-width: 0; }
+      .tx-main .nm { font-weight: 600; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .tx-main .dt { font-size: 12.5px; color: var(--ink-3); }
+      .tx-right { text-align: right; flex: none; }
+      .tx-right .amt { display: block; font-size: 14.5px; }
+      .tx-del {
+        appearance: none; border: 0; background: transparent; cursor: pointer;
+        color: var(--ink-3); font-size: 18px; line-height: 1;
+        width: 28px; height: 28px; border-radius: 8px; margin-top: 2px;
+      }
+      .tx-del:hover, .tx-del:focus-visible { color: var(--red); background: var(--red-soft); outline: none; }
+      .empty-state {
+        text-align: center; color: var(--ink-2);
+        padding: 28px 16px; background: var(--surface);
+        border: 1px dashed var(--line); border-radius: 14px; font-size: 14px;
+      }
+      /* ---------- laporan ---------- */
+      table.report { width: 100%; border-collapse: collapse; font-size: 14px; }
+      table.report th, table.report td { padding: 10px 8px; text-align: left; }
+      table.report thead th {
+        font-size: 12px; text-transform: uppercase; letter-spacing: .05em;
+        color: var(--ink-3); border-bottom: 2px solid var(--line);
+      }
+      table.report tbody td { border-bottom: 1px solid var(--line); }
+      table.report tbody tr:last-child td { border-bottom: 0; }
+      table.report tfoot td { font-weight: 800; border-top: 2px solid var(--line); }
+      table.report .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .sum-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+      .sum-box { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 10px; box-shadow: var(--shadow); }
+      .sum-box .k { font-size: 11.5px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: .04em; }
+      .sum-box .v { font-size: 15.5px; font-weight: 800; margin-top: 3px; font-variant-numeric: tabular-nums; }
+      .sum-box .v.in { color: var(--green); }
+      .sum-box .v.out { color: var(--red); }
+      .export-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+      .btn-export {
+        appearance: none; cursor: pointer; font: inherit;
+        display: flex; flex-direction: column; align-items: center; gap: 7px;
+        padding: 14px 6px; border-radius: 14px;
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+        font-size: 13px; font-weight: 700; box-shadow: var(--shadow);
+      }
+      .btn-export svg { color: var(--accent); }
+      .btn-export:active { transform: scale(.98); }
+      .note-card {
+        display: flex; gap: 10px; align-items: flex-start;
+        background: var(--accent-soft); border-radius: 14px; padding: 13px 14px;
+        font-size: 13.5px; color: var(--ink); margin-bottom: 14px;
+      }
+      .note-card svg { flex: none; margin-top: 1px; color: var(--accent); }
+      /* ---------- placeholder anggota / saya ---------- */
+      .placeholder {
+        text-align: center; padding: 34px 20px;
+      }
+      .placeholder .ic {
+        width: 56px; height: 56px; border-radius: 18px; margin: 0 auto 12px;
+        background: var(--accent-soft); color: var(--accent);
+        display: flex; align-items: center; justify-content: center;
+      }
+      .placeholder p { color: var(--ink-2); font-size: 14px; margin: 0 auto; max-width: 300px; }
+      .menu-list { list-style: none; margin: 0; padding: 0; }
+      .menu-list li {
+        display: flex; align-items: center; gap: 10px;
+        padding: 12px 2px; border-bottom: 1px solid var(--line); font-weight: 600; font-size: 14.5px;
+      }
+      .menu-list li:last-child { border-bottom: 0; }
+      .menu-list .chev { margin-left: auto; color: var(--ink-3); }
+      /* ---------- navigasi bawah ---------- */
+      .bottom-nav {
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+        background: var(--nav-bg);
+        border-top: 1px solid var(--line);
+        backdrop-filter: blur(8px);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+      .bottom-nav .inner {
+        max-width: 480px; margin: 0 auto;
+        display: grid; grid-template-columns: repeat(5, 1fr);
+      }
+      .nav-btn {
+        appearance: none; border: 0; background: transparent; cursor: pointer;
+        font: inherit; font-size: 11px; font-weight: 600; color: var(--ink-3);
+        display: flex; flex-direction: column; align-items: center; gap: 3px;
+        padding: 9px 2px 8px;
+      }
+      .nav-btn.active { color: var(--accent); }
+      .nav-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+      /* ---------- dialog & toast ---------- */
+      .overlay {
+        position: fixed; inset: 0; z-index: 60;
+        background: rgba(10, 18, 15, .55);
+        display: none; align-items: flex-end; justify-content: center;
+      }
+      .overlay.open { display: flex; }
+      .dialog {
+        background: var(--surface); color: var(--ink);
+        width: 100%; max-width: 480px;
+        border-radius: 20px 20px 0 0;
+        padding: 22px 20px calc(20px + env(safe-area-inset-bottom));
+      }
+      @media (min-width: 560px) {
+        .overlay { align-items: center; padding: 20px; }
+        .dialog { border-radius: 20px; }
+      }
+      .dialog h3 { margin: 0 0 6px; font-size: 17px; font-weight: 800; }
+      .dialog p { margin: 0 0 18px; color: var(--ink-2); font-size: 14px; }
+      .dialog .tx-preview {
+        background: var(--surface-2); border-radius: 12px; padding: 11px 13px;
+        font-size: 14px; margin-bottom: 18px;
+        display: flex; justify-content: space-between; gap: 10px;
+      }
+      .dialog-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .btn {
+        appearance: none; cursor: pointer; font: inherit;
+        font-size: 14.5px; font-weight: 700;
+        padding: 12px; border-radius: 12px; border: 1px solid var(--line);
+        background: var(--surface); color: var(--ink);
+      }
+      .btn.danger { background: var(--red); border-color: var(--red); color: #fff; }
+      .toast {
+        position: fixed; left: 50%; bottom: 96px; z-index: 70;
+        transform: translate(-50%, 16px);
+        background: var(--ink); color: var(--bg);
+        font-size: 13.5px; font-weight: 600;
+        padding: 11px 16px; border-radius: 999px;
+        opacity: 0; pointer-events: none;
+        transition: opacity .25s ease, transform .25s ease;
+        max-width: calc(100vw - 32px); text-align: center;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+      }
+      .toast.show { opacity: 1; transform: translate(-50%, 0); }
+      @media (prefers-reduced-motion: reduce) {
+        .progress > div, .toast { transition: none; }
+      }
+      /* ---------- login ---------- */
+      [hidden] { display: none !important; }
+      .login-head { text-align: center; margin: 10px 2px 18px; }
+      .login-head .ic {
+        width: 56px; height: 56px; border-radius: 18px; margin: 0 auto 12px;
+        background: var(--accent-soft); color: var(--accent);
+        display: flex; align-items: center; justify-content: center;
+      }
+      .login-head h1 { margin: 0 0 4px; font-size: 22px; font-weight: 800; }
+      .login-head p { margin: 0; color: var(--ink-2); font-size: 13.5px; }
+      .field { margin-bottom: 14px; }
+      .field label { display: block; font-size: 13.5px; font-weight: 700; margin-bottom: 6px; }
+      .field input {
+        width: 100%; font: inherit; font-size: 15px;
+        padding: 12px 13px; border: 1px solid var(--line); border-radius: 12px;
+        background: var(--surface); color: var(--ink);
+      }
+      .field input:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+      .btn-primary {
+        appearance: none; cursor: pointer; font: inherit; width: 100%;
+        font-size: 15px; font-weight: 800; padding: 13px;
+        border-radius: 12px; border: 1px solid var(--accent);
+        background: var(--accent); color: #fff;
+      }
+      .btn-primary:active { transform: scale(.99); }
+      .login-error {
+        display: none; background: var(--red-soft); color: var(--red);
+        font-size: 13.5px; font-weight: 600; border-radius: 12px;
+        padding: 11px 13px; margin-bottom: 14px;
+      }
+      .login-error.show { display: block; }
+      .demo-box {
+        background: var(--amber-soft); border: 1px solid var(--line);
+        border-radius: 14px; padding: 13px 14px; margin-top: 14px;
+      }
+      .demo-box .demo-title { font-size: 12.5px; font-weight: 700; color: var(--amber); margin-bottom: 8px; line-height: 1.4; }
+      .demo-box ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+      .demo-box li { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; }
+      .demo-box li .who b { display: block; font-size: 13.5px; }
+      .demo-box li .who span { color: var(--ink-2); font-size: 12px; }
+      .demo-box code { font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; align-self: center; }
+      .greeting-top { display: flex; align-items: flex-start; gap: 10px; }
+      .greeting-top .greeting { flex: 1; min-width: 0; }
+      .btn-logout {
+        appearance: none; cursor: pointer; font: inherit; flex: none;
+        font-size: 13px; font-weight: 700; padding: 8px 13px; border-radius: 999px;
+        border: 1px solid var(--line); background: var(--surface); color: var(--red);
+        box-shadow: var(--shadow); margin-top: 2px;
+      }
+      .menu-list button.menu-item {
+        appearance: none; border: 0; background: transparent; cursor: pointer; font: inherit;
+        display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+        padding: 0; font-weight: 600; font-size: 14.5px; color: var(--red);
+      }
+
+      /* ---------- elemen versi online ---------- */
+      .field select {
+        width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px;
+        background: var(--card); color: var(--ink); font: inherit; font-size: 14.5px;
+      }
+      .field textarea { font: inherit; }
+      .dialog { max-height: 92vh; overflow-y: auto; }
+      .dialog .field label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+      .dialog .field input, .dialog .field select {
+        width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px;
+        background: var(--card); color: var(--ink); font: inherit; font-size: 14.5px; box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ================= LOGIN ================= -->
+    <div id="loginView">
+      <div class="app" style="padding-bottom:24px;">
+        <div class="login-head">
+          <div class="ic">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h1>KasBoard CK05</h1>
+          <p id="authSub">Masuk untuk mengelola keuangan kelas 01IKOK005.</p>
+        </div>
+
+        <form class="card" id="loginForm" novalidate>
+          <div class="login-error" id="loginError" role="alert"></div>
+          <div class="field">
+            <label for="loginName">Nama</label>
+            <input type="text" id="loginName" autocomplete="username" placeholder="Nama sesuai daftar kelas" />
+          </div>
+          <div class="field" id="nimField" hidden>
+            <label for="loginNim">NIM (untuk daftar / atur ulang kode)</label>
+            <input type="text" id="loginNim" inputmode="numeric" autocomplete="off" placeholder="NIM kamu" />
+          </div>
+          <div class="field">
+            <label for="loginCode">Kode akses</label>
+            <input type="password" id="loginCode" autocomplete="current-password" placeholder="Kode akses kamu" />
+          </div>
+          <div class="field" id="code2Field" hidden>
+            <label for="loginCode2">Ulangi kode akses</label>
+            <input type="password" id="loginCode2" autocomplete="new-password" placeholder="Ulangi kode akses" />
+          </div>
+          <button type="submit" class="btn-primary" id="loginBtn">Masuk</button>
+          <p class="fineprint" style="text-align:center;" id="authSwitch">Belum punya akun? <a href="#" id="toRegister">Daftar sekarang</a> · <a href="#" id="toReset">Lupa kode akses?</a></p>
+          <p class="fineprint" style="text-align:center;" id="authBack" hidden><a href="#" id="toLogin">Kembali masuk</a></p>
+        </form>
+
+        <p class="fineprint" style="text-align:center;" id="authNote">Daftar memakai nama + NIM sesuai data kelas, lalu buat kode akses sendiri (min. 6 karakter). Masuk cukup nama + kode akses kamu.</p>
+      </div>
+    </div>
+
+    <!-- ================= APLIKASI (setelah login) ================= -->
+    <div id="appView" hidden>
+    <div class="app">
+
+      <!-- ================= BERANDA ================= -->
+      <section class="page active" id="page-beranda">
+        <div class="greeting-top">
+          <header class="greeting">
+            <div class="halo">Selamat malam,</div>
+            <h1 id="greetingName">ARIF HIDAYAT</h1>
+            <div class="meta"><strong id="greetingRole">Ketua Kelas</strong> · Kelas 01IKOK005 — Ilmu Komunikasi, UNPAM<br />Periode 2025 - 2026</div>
+          </header>
+          <button type="button" class="btn-logout" data-logout>Keluar</button>
+        </div>
+
+        <div class="fund-switch" role="tablist" aria-label="Pilih dana" id="fundSwitch">
+          <button type="button" class="active" data-fund="kas">Kas Kelas</button>
+          <button type="button" data-fund="seminar">Dana Seminar</button>
+          <button type="button" data-fund="semua">Semua</button>
+        </div>
+
+        <div class="card saldo-card">
+          <div class="label" id="saldoLabel">Saldo Kas Kelas</div>
+          <div class="amount" id="saldoAmount">Rp157.410</div>
+          <div class="saldo-grid">
+            <div class="saldo-mini">
+              <div class="k">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+                Pemasukan
+              </div>
+              <div class="v" id="saldoIn">Rp270.000</div>
+            </div>
+            <div class="saldo-mini">
+              <div class="k">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+                Pengeluaran
+              </div>
+              <div class="v" id="saldoOut">Rp112.590</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="iuranCard">
+          <h2>Info iuran</h2>
+          <div class="info-rows" id="iuranRows"></div>
+        </div>
+
+        <div class="card qris-card" id="qrisCard">
+          <h2>Bayar Iuran via QRIS</h2>
+          <button type="button" class="qris-qr-btn" id="qrisOpen" aria-label="Perbesar kode QRIS untuk dipindai">
+            <img src="data:image/png;base64,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" alt="Kode QRIS Jastipin Satset untuk pembayaran iuran" width="706" height="688" />
+          </button>
+          <p class="qris-tap-hint">Ketuk kode QR untuk memperbesar</p>
+          <p class="qris-merchant">Jastipin Satset <span>· NMID ID1026521611925</span></p>
+          <p class="qris-helper" id="qrisHelper">Iuran Kas Kelas <strong>Rp10.000</strong> — scan, bayar, lalu kirim bukti ke Ketua Kelas, Arif Hidayat</p>
+        </div>
+
+        <div class="card">
+          <h2>Status iuran anggota <span class="sub" id="statusFundLabel">Kas Kelas</span></h2>
+          <div id="statusBlocks"></div>
+        </div>
+
+        <div class="card">
+          <h2 id="arrearsTitle">Belum bayar (9)</h2>
+          <ul class="name-list" id="arrearsList"></ul>
+          <p class="fineprint" id="arrearsNote"></p>
+        </div>
+
+        <div class="card" id="expenseCard">
+          <h2>Pengeluaran terakhir</h2>
+          <ul class="name-list">
+            <li>
+              <span class="avatar red">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18l-1.5 9h-15z"/><path d="M3 6 2 3H0"/><circle cx="9" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/></svg>
+              </span>
+              <span class="who">
+                <span class="nm">Beli Rol kelas</span><br />
+                <span class="dt">Rabu, 28 Oktober 2026 · Kas Kelas</span>
+              </span>
+              <span class="amt out">−Rp112.590</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= AKTIVITAS ================= -->
+      <section class="page" id="page-aktivitas">
+        <h2 class="page-title">Aktivitas</h2>
+        <p class="page-sub" id="txSub">Transaksi dana yang sedang aktif. Ketuk tanda × untuk menghapus — akan muncul konfirmasi dulu.</p>
+        <div style="display:flex;gap:8px;margin:0 0 14px;" id="catatRow" hidden>
+          <button type="button" class="btn-primary" id="catatIn" style="flex:1;">+ Catat pemasukan</button>
+          <button type="button" class="btn-primary" id="catatOut" style="flex:1;background:var(--red);">− Catat pengeluaran</button>
+        </div>
+
+        <div class="search-box">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="txSearch" placeholder="Cari nama atau keterangan…" aria-label="Cari transaksi" />
+        </div>
+
+        <div class="filter-row">
+          <select id="txMonth" aria-label="Filter bulan">
+            <option value="all">Semua bulan</option>
+          </select>
+          <div class="chip-group" id="txType" role="group" aria-label="Filter jenis transaksi">
+            <button type="button" class="chip active" data-type="all">Semua</button>
+            <button type="button" class="chip" data-type="masuk">Masuk</button>
+            <button type="button" class="chip" data-type="keluar">Keluar</button>
+          </div>
+        </div>
+
+        <p class="list-count" id="txCount"></p>
+        <ul class="tx-list" id="txList"></ul>
+        <div class="empty-state" id="txEmpty" hidden>Tidak ada transaksi yang cocok dengan filter ini.</div>
+        
+      </section>
+
+      <!-- ================= LAPORAN ================= -->
+      <section class="page" id="page-laporan">
+        <h2 class="page-title" id="reportTitle">Laporan — Kas Kelas</h2>
+        <p class="page-sub" id="reportSub">Menampilkan hanya Kas Kelas. Ekspor Excel, Gambar, dan Cetak/PDF mengikuti dana yang dipilih di sini — data dana lain tidak ikut.</p>
+
+        <div class="fund-switch" id="reportSwitch" aria-label="Pilih dana laporan">
+          <button type="button" class="active" data-rfund="kas" style="grid-column: span 1;">Kas Kelas</button>
+          <button type="button" data-rfund="seminar">Dana Seminar</button>
+          <button type="button" data-rfund="semua">Semua</button>
+        </div>
+
+        <div class="sum-grid">
+          <div class="sum-box"><div class="k">Total Masuk</div><div class="v in" id="repIn">Rp270.000</div></div>
+          <div class="sum-box"><div class="k">Total Keluar</div><div class="v out" id="repOut">Rp112.590</div></div>
+          <div class="sum-box"><div class="k">Saldo</div><div class="v" id="repSaldo">Rp157.410</div></div>
+        </div>
+
+        <div class="card">
+          <h2 id="repTableTitle">Rincian per bulan — Kas Kelas</h2>
+          <div id="repTableWrap"></div>
+        </div>
+
+        <div class="card" id="repCardKasPaid">
+          <h2>Sudah Bayar — Kas Kelas (27)</h2>
+          <ul class="name-list" id="reportPaidList"></ul>
+          <p class="fineprint">Daftar ini ikut dibagikan ke grup kelas supaya semua anggota tahu siapa yang sudah lunas.</p>
+        </div>
+
+        <div class="card" id="repCardKasUnpaid">
+          <h2>Belum Bayar — Kas Kelas (9)</h2>
+          <ul class="name-list" id="reportUnpaidList"></ul>
+          
+        </div>
+
+        <div class="card" id="repCardSemPaid">
+          <h2>Sudah Bayar — Dana Seminar (21 Lunas)</h2>
+          <ul class="name-list" id="reportSemPaidList"></ul>
+          <p class="fineprint">Formatnya sama seperti Kas Kelas, supaya laporan Dana Seminar juga siap dibagikan ke grup kelas.</p>
+        </div>
+
+        <div class="card" id="repCardSemKurang">
+          <h2>Kurang Bayar — Dana Seminar (1)</h2>
+          <ul class="name-list">
+            <li>
+              <span class="avatar red">PZ</span>
+              <span class="who">
+                <span class="nm">Panca Zuliyana Kartika</span><br />
+                <span class="dt">Baru bayar Rp50.000 dari iuran Rp77.000</span>
+              </span>
+              <span class="tag-kurang">KURANG Rp27.000</span>
+            </li>
+          </ul>
+          <p class="fineprint">Data asli dari catatan Dana Seminar: satu-satunya anggota yang bayar sebagian.</p>
+        </div>
+
+        <div class="card" id="repCardSemUnpaid">
+          <h2>Belum Bayar — Dana Seminar (14)</h2>
+          <ul class="name-list" id="reportSemUnpaidList"></ul>
+          <p class="fineprint">14 dari 36 anggota belum membayar Dana Seminar sama sekali (36 anggota − 22 pembayar).</p>
+        </div>
+
+        <div class="card">
+          <h2>Ekspor laporan <span class="sub" id="exportScopeLabel">hanya Kas Kelas</span></h2>
+          <div class="export-grid">
+            <button type="button" class="btn-export" data-export="Excel (.xlsx)" data-export-type="excel">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 13 6 6M15 13l-6 6"/></svg>
+              Excel (.xls)
+            </button>
+            <button type="button" class="btn-export" data-export="Gambar (.jpg)" data-export-type="gambar">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L6 21"/></svg>
+              Gambar (.jpg)
+            </button>
+            <button type="button" class="btn-export" data-export="Cetak / PDF" data-export-type="pdf">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Cetak / PDF
+            </button>
+          </div>
+          <p class="fineprint" id="exportNote">Berkas yang diunduh hanya berisi data Kas Kelas — tidak ada angka, nama, atau bagian Dana Seminar di dalamnya.</p>
+        </div>
+
+      </section>
+
+      <!-- ================= ANGGOTA ================= -->
+      <section class="page" id="page-anggota">
+        <h2 class="page-title">Anggota</h2>
+        <p class="page-sub">36 anggota · Kelas 01IKOK005 — ketuk tombol WhatsApp hijau di tiap anggota untuk mengirim pengingat atau ucapan terima kasih. Pilihan yang muncul hanya yang sesuai status bayar anggota itu di tiap dana.</p>
+        <div class="card">
+          <h2>Daftar anggota <span class="sub" id="memberFundSub">Kas Kelas · Dana Seminar</span></h2>
+          <ul class="member-list" id="memberList"></ul>
+          <p class="fineprint">Status dihitung langsung dari data transaksi yang tersimpan di Firebase.</p>
+        </div>
+      </section>
+
+      <!-- ================= SAYA ================= -->
+      <section class="page" id="page-saya">
+        <h2 class="page-title">Saya</h2>
+        <p class="page-sub" id="sayaSub">—</p>
+        <div class="card">
+          <ul class="menu-list">
+            <li>
+              <button type="button" class="menu-item" id="menuChpw">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Ganti kode akses saya
+                <span class="chev">›</span>
+              </button>
+            </li>
+            <li id="menuTplItem">
+              <button type="button" class="menu-item" id="menuTpl">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Template pesan WhatsApp
+                <span class="chev">›</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="menu-item" data-logout>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+                Keluar
+                <span class="chev">›</span>
+              </button>
+            </li>
+          </ul>
+          <p class="fineprint">Data tersimpan online di Firebase kasboard-ck05 dan tersinkron antar perangkat. Hanya akun Ketua Kelas (Arif Hidayat) yang bisa mencatat, mengubah, dan menghapus data.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ================= NAVIGASI BAWAH ================= -->
+    <nav class="bottom-nav" aria-label="Navigasi utama">
+      <div class="inner">
+        <button type="button" class="nav-btn active" data-page="beranda">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+          Beranda
+        </button>
+        <button type="button" class="nav-btn" data-page="aktivitas">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Aktivitas
+        </button>
+        <button type="button" class="nav-btn" data-page="laporan">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>
+          Laporan
+        </button>
+        <button type="button" class="nav-btn" data-page="anggota">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Anggota
+        </button>
+        <button type="button" class="nav-btn" data-page="saya">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 14 0v1"/></svg>
+          Saya
+        </button>
+      </div>
+    </nav>
+    </div><!-- /#appView -->
+
+    <!-- ================= MODAL QRIS ================= -->
+    <div class="overlay" id="qrisOverlay" role="dialog" aria-modal="true" aria-labelledby="qrisTitle">
+      <div class="dialog qris-dialog">
+        <h3 id="qrisTitle">Bayar Iuran via QRIS</h3>
+        <p>Pindai kode ini dengan aplikasi pembayaran berlogo QRIS.</p>
+        <div class="qris-qr-large">
+          <img src="data:image/png;base64,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" alt="Kode QRIS Jastipin Satset ukuran besar untuk dipindai" width="706" height="688" />
+        </div>
+        <p class="qris-merchant">Jastipin Satset <span>· NMID ID1026521611925</span></p>
+        <p class="qris-helper" id="qrisHelperModal" style="margin-bottom:18px;">Iuran Kas Kelas <strong>Rp10.000</strong> — scan, bayar, lalu kirim bukti ke Ketua Kelas, Arif Hidayat</p>
+        <div class="dialog-actions">
+          <button type="button" class="btn" id="qrisClose">Tutup</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= DIALOG WHATSAPP ANGGOTA ================= -->
+    <div class="overlay" id="waOverlay" role="dialog" aria-modal="true" aria-labelledby="waTitle">
+      <div class="dialog">
+        <h3 id="waTitle">Anggota</h3>
+        <p id="waSub" style="margin-bottom:14px;">Pilih pesan WhatsApp untuk anggota ini.</p>
+        <div class="wa-options" id="waOptions" role="group" aria-label="Pilihan pesan WhatsApp"></div>
+        <p class="wa-preview-label">Pratinjau pesan</p>
+        <pre class="wa-preview" id="waPreview"></pre>
+        <p class="wa-note" id="waNote">Nomor WA anggota tersambung dari data kelas dan dokumen kontak/wa di Firebase.</p>
+        <a class="btn-wa-open" id="waOpen" href="https://wa.me/?text=" target="_blank" rel="noopener">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413"/></svg>
+          Buka WhatsApp
+        </a>
+        <div class="dialog-actions" style="grid-template-columns:1fr;">
+          <button type="button" class="btn" id="waClose">Tutup</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= DIALOG HAPUS ================= -->
+    <div class="overlay" id="deleteOverlay" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
+      <div class="dialog">
+        <h3 id="deleteTitle">Yakin hapus transaksi ini?</h3>
+        <p>Transaksi yang dihapus tidak bisa dikembalikan. Di aplikasi asli, langkah konfirmasi ini mencegah data kas terhapus karena salah pencet.</p>
+        <div class="tx-preview" id="deletePreview"></div>
+        <div class="dialog-actions">
+          <button type="button" class="btn" id="deleteCancel">Batal</button>
+          <button type="button" class="btn danger" id="deleteConfirm">Ya, hapus</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status"></div>
+
+    <!-- ================= CATAT TRANSAKSI ================= -->
+    <div class="overlay" id="catatOverlay" role="dialog" aria-modal="true" aria-labelledby="catatTitle">
+      <div class="dialog">
+        <h3 id="catatTitle">Catat pemasukan</h3>
+        <form id="catatForm" novalidate>
+          <div class="field" id="catatMemberField">
+            <label for="catatMember">Dari anggota</label>
+            <select id="catatMember"></select>
+          </div>
+          <div class="field">
+            <label for="catatKat">Kategori</label>
+            <select id="catatKat"></select>
+          </div>
+          <div class="field">
+            <label for="catatAmount">Jumlah (Rp)</label>
+            <input type="number" id="catatAmount" inputmode="numeric" min="1" placeholder="10000" />
+          </div>
+          <div class="field">
+            <label for="catatDate">Tanggal</label>
+            <input type="date" id="catatDate" />
+          </div>
+          <div class="field">
+            <label for="catatNote">Catatan</label>
+            <input type="text" id="catatNote" placeholder="Iuran kas kelas" />
+          </div>
+          <div class="dlg-actions">
+            <button type="button" class="btn-ghost" id="catatCancel">Batal</button>
+            <button type="submit" class="btn-danger" id="catatSave" style="background:var(--green);">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= TEMPLATE WA ================= -->
+    <div class="overlay" id="tplOverlay" role="dialog" aria-modal="true" aria-labelledby="tplTitle">
+      <div class="dialog">
+        <h3 id="tplTitle">Template WhatsApp</h3>
+        <p style="margin:0 0 10px;color:var(--ink-2);font-size:13.5px;" id="tplSub">Kata kunci: {nama} {target} {dibayar} {kurang} {saku} {bendahara}. Kosongkan untuk kembali ke template bawaan.</p>
+        <textarea id="tplText" rows="9" style="width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;font-size:14px;"></textarea>
+        <div class="dlg-actions">
+          <button type="button" class="btn-ghost" id="tplCancel">Batal</button>
+          <button type="button" class="btn-danger" id="tplSave" style="background:var(--green);">Simpan</button>
+        </div>
+      </div>
+    </div>
+<script type="module">
+let FBX={ready:false};
+try{
+ const cfg=await import('./firebase-config.js');
+ if(!cfg.FIREBASE_CONFIG||String(cfg.FIREBASE_CONFIG.apiKey).startsWith('ISI'))throw new Error('config');
+ const V='https://www.gstatic.com/firebasejs/10.14.1/';
+ const [A,Au,Fs]=await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-auth.js'),import(V+'firebase-firestore.js')]);
+ const app=A.initializeApp(cfg.FIREBASE_CONFIG),au=Au.getAuth(app),fs=Fs.getFirestore(app),sn=s=>({exists:()=>s.exists(),data:()=>s.data()});
+ FBX={ready:true,admins:cfg.ADMINS||[],email:n=>'m'+n+'@ck05-kasboard.com',onAuth:cb=>Au.onAuthStateChanged(au,cb),user:()=>au.currentUser,
+  signup:(e,p)=>Au.createUserWithEmailAndPassword(au,e,p),login:(e,p)=>Au.signInWithEmailAndPassword(au,e,p),logout:()=>Au.signOut(au),
+  chpw:async(o,n)=>{const u=au.currentUser;await Au.reauthenticateWithCredential(u,Au.EmailAuthProvider.credential(u.email,o));await Au.updatePassword(u,n)},
+  db:{doc:p=>{const r=Fs.doc(fs,...p.split('/'));return{onSnapshot:(cb,er)=>Fs.onSnapshot(r,s=>cb(sn(s)),er),set:o=>Fs.setDoc(r,o),get:async()=>sn(await Fs.getDoc(r))}}}};
+}catch(e){console.warn('Firebase belum siap',e)}
+window.FBX=FBX;dispatchEvent(new Event('fbready'));
+</script><script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))</script>
+    <script>
+      // ---------- util ----------
+      function rp(n) { return "Rp" + n.toLocaleString("id-ID"); }
+      function initials(name) {
+        return name.split(" ").filter(Boolean).slice(0, 2).map(function (w) { return w[0]; }).join("").toUpperCase();
+      }
+      var DAYS = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+      var MONTHS = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      function fmtDate(iso) {
+        var d = new Date(iso + "T00:00:00");
+        return DAYS[d.getDay()] + ", " + d.getDate() + " " + MONTHS[d.getMonth()] + " " + d.getFullYear();
+      }
+      var toastTimer = null;
+      function showToast(msg) {
+        var t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2600);
+      }
+
+      // ---------- data dana: FUNDS dihitung dari Firestore (lihat computeDerived) ----------
+
+      // ================= KASBOARD CK05 — versi online (Firebase) =================
+      // Data hidup di Firestore proyek kasboard-ck05:
+      //   kas/kelas, kas/seminar  -> {tx:[{id,t,k,d,m,a,n}], target, tpl}
+      //   kontak/wa               -> {n:{noAnggota: "62..."}}
+      // Status anggota, saldo, dan laporan SELALU dihitung dari transaksi (bukan data contoh).
+
+      var FUND_DEF = {
+        kas: { key: "kas", label: "Kas Kelas", iuran: 10000 },
+        seminar: { key: "seminar", label: "Dana Seminar", iuran: 77000 }
+      };
+      var MOD_OF = { kas: "kelas", seminar: "seminar" };
+
+      // Daftar anggota: nomor urut + nama + NIM-hash (untuk verifikasi daftar, persis aplikasi lama)
+      // + nomor WA (format 62) dari data kelas Data_kls.xlsx.
+      var MEMBERS_BASE = [{"no": 1, "name": "AHMAD LUTHFI SAUKI", "hash": "057981a7e01dbd7404e57822f57ef85445aa692a288e0c4589560df8e7937585", "wa": "6285285027055"}, {"no": 2, "name": "AISYAH SATIRA", "hash": "e630e015d437325b3f7e9ad4ef4b8dde922a28d984aa2d7351fc91ccfb15a176", "wa": "6285294117896"}, {"no": 3, "name": "ALFIANA NURUL LISANA", "hash": "3cdbc85195c4596f8040e92b33f759fb8490bb2edbfd6c87bcdd46f3d28326c5", "wa": "628971596477"}, {"no": 4, "name": "AREL BISRI AL AYUBI", "hash": "efccce541fe47763fb342f1f9b2f853ac0f4cd6ce6f02977047cbfb9b715a141", "wa": "6281936850418"}, {"no": 5, "name": "ARIF HIDAYAT", "hash": "6ba07598d63397b95f89c71908bc74ee1ab8812ee6d70d9104ee94a1ceb27970", "wa": "6285117231372"}, {"no": 6, "name": "AULIA AL FILLAH", "hash": "33e3aaefe6b7791aab062282e7f4be1c2dff961e72dd54c359bb2e6d378bc0f4", "wa": "6285882694481"}, {"no": 7, "name": "FAREL ADI PRAMUDYA", "hash": "9660601d8fc853b6f72b56af2bb31e9c3ebe811e86418fa0fac39d0776f7d96b", "wa": "6283152443062"}, {"no": 8, "name": "HILMAN NUARI ILYAS", "hash": "ca700019170943a495a2a4959b8d9d06829a685d9a48cb66ef50c15fb8d15879", "wa": "6285156100326"}, {"no": 9, "name": "HILWA NURMAULIDA", "hash": "d3d62229843f4d0e094340f97de71e88ea25a1f18a083715d86cb39e4ec67d7a", "wa": "6283824855158"}, {"no": 10, "name": "IIF DIKA ARNANDA", "hash": "acfb4c7d859f4f494ac4b777152c8500bb6ad810c754719e5d750571de013a85", "wa": "6283898353638"}, {"no": 11, "name": "JESSICA AMELIA JOSMAN", "hash": "5f82e1070c9d9c2ffbe96d1f24291a2b8e1dcae3a4f2a37f64ec2043e3a9b858", "wa": "6287796725733"}, {"no": 12, "name": "KENTI UMI GUSMIARNI", "hash": "85a9b2e185f01f9de81fe789c65d5d6e64accb6a99f5870730e10e565bfa9c63", "wa": "6281325987913"}, {"no": 13, "name": "KEYSAN NOVAL MUSAFA", "hash": "80421a5d63149e93f27d176a9c291644faa4821e45896810fa5bea8128465584", "wa": "628978808997"}, {"no": 14, "name": "LUSI DARMAYANTI", "hash": "0abde1649f5b8be1bd5ef9d76057e929d6e301d9163d827ee08882067a597883", "wa": "6285880927813"}, {"no": 15, "name": "MAULINA KARISMA", "hash": "79cad79bf5301396b9d438058b24fda33c5620e46c641d6377e1a31217c6a08b", "wa": "6281293312945"}, {"no": 16, "name": "MEISYA ALY", "hash": "e6e1808b550dbd045f34ed6dd21bdced44b20f0bad69d0c9ba0e544e0c86c3b2", "wa": "628985734928"}, {"no": 17, "name": "MUHAMAD ALFIANSYAH FIRDAUS", "hash": "b637a6e96b25542fa3e46d8a65249e86958becfbb0f09675b5e6adf11d29900a", "wa": "6281389876104"}, {"no": 18, "name": "MUHAMAD RIZAL SUBAGZA", "hash": "afd82a9550397274d487e9d8184134dc42c8b2763320dcec4568ae85add976ec", "wa": "6285743081358"}, {"no": 19, "name": "MUHAMAD SABRIYANSYAH", "hash": "61dabfbda24fca4cde017ff9965e117e73a3c9c7c7ace3eeff3afcdb42f6fcd1", "wa": "6285719299152"}, {"no": 20, "name": "MUHAMMAD AMAR MA'RUF NATUNGGA", "hash": "f1df42b89ee21ddaadda07c40a0fdf5fdd9edbd15dd46299de1e4b0d2e7fff24", "wa": "628881173653"}, {"no": 21, "name": "MUHAMMAD GILBRAN FIRDAUS", "hash": "e8177398471898194ffe4d350e11b0d069e41db17999dc39ad46dae11f251990", "wa": "6281282618035"}, {"no": 22, "name": "MUHAMMAD IFFALDO GYMNASTIAR", "hash": "c2a49c01b6c5cba08d33cacabc1944c6796565acb50cf77bd51b40bd36042520", "wa": "6287884839996"}, {"no": 23, "name": "MUTIARA ZAKILLA DEWI", "hash": "786cafbb222e6ba59d909c8388be0e45ba800b71f7adcf6eabf3445c9b0c5840", "wa": "6285772436651"}, {"no": 24, "name": "NABIL MAULANA", "hash": "4517c627fd2fe176629c23c9bf3e223a6a572f5d75c2fa3d97a85b61aa5aeee9", "wa": "6281378228945"}, {"no": 25, "name": "NADIA PUTRI PRAWITA SARI", "hash": "412cd8487c7ab4571687dc28d95f3d78779993339b6182d290f0ccc67300d9d4", "wa": "6285697410286"}, {"no": 26, "name": "NOVERIANUS GULO", "hash": "3fb1ec29222b5a9ca47e1c6e2b589e25c6d3b65976d0219ed84104c11b135de7", "wa": "6285358542673"}, {"no": 27, "name": "PANCA ZULIYANA KARTIKA", "hash": "66e20f876109cfeb702b975e7e06654375a694b3fd918ad35331e83eec61e62c", "wa": "6281289866788"}, {"no": 28, "name": "PUTRI MASYIFA KHAIRIYAH RULLY", "hash": "dfc4abbb7782208c3a096a8da4aff1f1abc664f01e23d53befd9ab91239c1095", "wa": "6285180644907"}, {"no": 29, "name": "RAHMAT ANDIKA SAPUTRA", "hash": "a45e84c47c1ee9e399fbec7bf71a4a760ddd595459a6fb2a55c364f387d9f0ac", "wa": "628978261366"}, {"no": 30, "name": "SALSA INDAH WIDYA SANTOSO", "hash": "fb440e2cf9ef41140c24dd7dc46ac82e34bf4e45aaf3d8fce34104eec075f300", "wa": "6288291214822"}, {"no": 31, "name": "SHAYLA RAMADANI", "hash": "be5df55f1faf0c68783ae40bb6b4a67543bf7d759d7b328e7cc2543515def020", "wa": "6285692824584"}, {"no": 32, "name": "SYAHRIANI PUTRI", "hash": "fb387e20402f07f0f28d44f271b2a77f30e1e975d73d7101a8177a5a271fcac3", "wa": "6281219635389"}, {"no": 33, "name": "TALITHA ZERLINA EVENDI", "hash": "d66493a4e0b49cd3280112cc9f0c87add6a6539005c85263bed6a0002ef34c14", "wa": "6289526075485"}, {"no": 34, "name": "VHANESSA APRILLITA", "hash": "afdf10d74fc86b364df68a3236136d1df035009080d10c23ad68e581fda00f01", "wa": "6282390603960"}, {"no": 35, "name": "YULIA TRI AMANDA", "hash": "eafb9d6f3b3388897d24309316c35178e001cc637429988216d2b12a65a6e90e", "wa": "6282171271332"}, {"no": 36, "name": "ZULFA KHAIRIYAH", "hash": "c107109b82c7cc120ee2c4e7f92bab37d3126340998b83c6eb3de4c9c9b25d1c", "wa": "6287744647056"}];
+
+      var DB = {
+        kelas: { tx: [], target: 0, tpl: "" },
+        seminar: { tx: [], target: 0, tpl: "" }
+      };
+      var WA_MAP = {};
+      var FB = null;
+      var ME = null;      // {no, name}
+      var isAdmin = false;
+
+      function tcName(s) { return String(s || "").toLowerCase().replace(/\b\w/g, function (c) { return c.toUpperCase(); }); }
+      function normName(s) { return String(s || "").toUpperCase().replace(/\s+/g, " ").trim(); }
+      function memByNo(no) { return MEMBERS_BASE.filter(function (m) { return m.no === no; })[0] || null; }
+      function memByName(n) { var t = normName(n); return MEMBERS_BASE.filter(function (m) { return normName(m.name) === t; })[0] || null; }
+      function paidIn(fundKey, no) {
+        return DB[MOD_OF[fundKey]].tx.filter(function (x) { return x.t === "in" && x.m === no; })
+          .reduce(function (s, x) { return s + (+x.a || 0); }, 0);
+      }
+      function fundTotals(fundKey) {
+        var tx = DB[MOD_OF[fundKey]].tx, i = 0, o = 0;
+        tx.forEach(function (x) { if (x.t === "in") i += +x.a || 0; else o += +x.a || 0; });
+        return { masuk: i, keluar: o, saldo: i - o };
+      }
+      function statusOf(fundKey, no) {
+        var target = DB[MOD_OF[fundKey]].target || 0, p = paidIn(fundKey, no);
+        if (target > 0) {
+          if (p >= target) return { status: "LUNAS", paid: p };
+          if (p > 0) return { status: "KURANG", paid: p };
+          return { status: "BELUM", paid: 0 };
+        }
+        // target belum diatur di dokumen ini: pakai iuran baku dana
+        var iur = FUND_DEF[fundKey].iuran;
+        if (p >= iur) return { status: "LUNAS", paid: p };
+        if (p > 0) return { status: "KURANG", paid: p };
+        return { status: "BELUM", paid: 0 };
+      }
+      var MEMBERS = [];
+      var txData = [];
+      var PAID_KAS = [], UNPAID_KAS = [], SEMINAR_PAID = [], SEMINAR_UNPAID = [];
+      var FUNDS = null;
+
+      function computeDerived() {
+        MEMBERS = MEMBERS_BASE.map(function (b) {
+          return {
+            no: b.no, name: b.name, phone: WA_MAP[b.no] || b.wa || "",
+            kas: statusOf("kas", b.no), seminar: statusOf("seminar", b.no)
+          };
+        });
+        function names(fundKey, st) {
+          return MEMBERS.filter(function (m) { return m[fundKey].status === st; }).map(function (m) { return m.name; });
+        }
+        UNPAID_KAS = names("kas", "BELUM");
+        SEMINAR_PAID = names("seminar", "LUNAS");
+        SEMINAR_UNPAID = names("seminar", "BELUM");
+        var actFund = (typeof currentFund !== "undefined" && currentFund !== "semua") ? currentFund : "kas";
+        txData = DB[MOD_OF[actFund]].tx.map(function (x, i) {
+          return {
+            id: i, xid: x.id, name: x.m ? (memByNo(x.m) ? tcName(memByNo(x.m).name) : "Anggota " + x.m) : (x.n || "Umum"),
+            type: x.t === "in" ? "masuk" : "keluar", amount: +x.a || 0, date: x.d || "",
+            note: x.n || x.k || ""
+          };
+        });
+        PAID_KAS = DB.kelas.tx.filter(function (x) { return x.t === "in" && x.m; })
+          .map(function (x) { return { name: memByNo(x.m) ? tcName(memByNo(x.m).name) : "Anggota " + x.m, date: x.d || "" }; });
+        var tk = fundTotals("kas"), ts = fundTotals("seminar");
+        var cnt = function (fk, st) { return MEMBERS.filter(function (m) { return m[fk].status === st; }).length; };
+        var kurangKas = cnt("kas", "KURANG"), kurangSem = cnt("seminar", "KURANG");
+        FUNDS = {
+          kas: { label: "Kas Kelas", saldo: tk.saldo, masuk: tk.masuk, keluar: tk.keluar, iuranRows: [
+            ["Iuran per anggota", rp(DB.kelas.target || FUND_DEF.kas.iuran)],
+            ["Total anggota", MEMBERS.length + " anggota"],
+            ["Sudah lunas", cnt("kas", "LUNAS") + " anggota"],
+            [kurangKas ? "Kurang bayar" : "Belum bayar", (kurangKas || cnt("kas", "BELUM")) + " anggota"]
+          ]},
+          seminar: { label: "Dana Seminar", saldo: ts.saldo, masuk: ts.masuk, keluar: ts.keluar, iuranRows: [
+            ["Iuran per anggota", rp(DB.seminar.target || FUND_DEF.seminar.iuran)],
+            ["Total pembayar", (cnt("seminar", "LUNAS") + cnt("seminar", "KURANG")) + " anggota"],
+            ["Sudah lunas", cnt("seminar", "LUNAS") + " anggota"],
+            ["Kurang bayar", kurangSem + " anggota"]
+          ]},
+          semua: { label: "Semua Dana", saldo: tk.saldo + ts.saldo, masuk: tk.masuk + ts.masuk, keluar: tk.keluar + ts.keluar, iuranRows: [
+            ["Kas Kelas — iuran per anggota", rp(DB.kelas.target || FUND_DEF.kas.iuran)],
+            ["Dana Seminar — iuran per anggota", rp(DB.seminar.target || FUND_DEF.seminar.iuran)],
+            ["Total pemasukan gabungan", rp(tk.masuk + ts.masuk)],
+            ["Saldo gabungan", rp(tk.saldo + ts.saldo)]
+          ]}
+        };
+      }
+
+      // ---------- simpan ke Firestore ----------
+      var saveTimers = {};
+      function saveFund(modKey) {
+        if (!FB || !FB.ready) return;
+        clearTimeout(saveTimers[modKey]);
+        saveTimers[modKey] = setTimeout(function () {
+          FB.db.doc("kas/" + modKey).set(DB[modKey]).catch(function () {
+            showToast("Gagal menyimpan: hanya Ketua Kelas yang boleh mengubah data.");
+          });
+        }, 250);
+      }
+      function saveWA() {
+        if (!FB || !FB.ready) return;
+        var n = {};
+        MEMBERS_BASE.forEach(function (b) { if (WA_MAP[b.no]) n[b.no] = WA_MAP[b.no]; });
+        FB.db.doc("kontak/wa").set({ n: n }).catch(function () {});
+      }
+
+      // ---------- langganan data (realtime) ----------
+      var subscribed = false;
+      function subscribeData() {
+        if (subscribed || !FB || !FB.ready) return;
+        subscribed = true;
+        ["kelas", "seminar"].forEach(function (modKey) {
+          FB.db.doc("kas/" + modKey).onSnapshot(function (s) {
+            if (s.exists()) { var d = s.data(); DB[modKey] = { tx: d.tx || [], target: d.target || 0, tpl: d.tpl || "" }; }
+            refreshAll();
+          }, function () {});
+        });
+        FB.db.doc("kontak/wa").get().then(function (s) {
+          if (s.exists()) { var n = (s.data() || {}).n || {}; Object.keys(n).forEach(function (k) { WA_MAP[+k] = n[k]; }); refreshAll(); }
+        }).catch(function () {});
+      }
+
+      function refreshAll() {
+        computeDerived();
+        if (typeof renderBeranda === "function") renderBeranda();
+        if (typeof renderTx === "function") renderTx();
+        if (typeof renderReport === "function") renderReport();
+        if (typeof renderReportLists === "function") renderReportLists();
+        if (typeof renderAnggota === "function") renderAnggota();
+        var cr = document.getElementById("catatRow");
+        if (cr) cr.hidden = !isAdmin;
+      }
+
+
+      // ---------- BERANDA ----------
+      var currentFund = "kas";
+
+      function statusBlockHTML(title, lunas, total, belumLabel, belum) {
+        var pct = Math.round(lunas / total * 100);
+        return '<div style="margin-bottom:14px;">' +
+          (title ? '<div style="font-weight:700;font-size:13.5px;margin-bottom:8px;">' + title + '</div>' : '') +
+          '<div class="progress"><div style="width:' + pct + '%"></div></div>' +
+          '<div class="stat-grid">' +
+            '<div class="stat-box ok"><div class="n">' + lunas + '</div><div class="t">Lunas</div></div>' +
+            '<div class="stat-box warn"><div class="n">' + belum + '</div><div class="t">' + belumLabel + '</div></div>' +
+          '</div>' +
+          '<p class="fineprint" style="margin-top:8px;">' + lunas + ' dari ' + total + ' anggota (' + pct + '%)</p>' +
+        '</div>';
+      }
+
+      function arrearsItemHTML(fundKey, m) {
+        var fd = FUND_DEF[fundKey], st = m[fundKey], target = DB[MOD_OF[fundKey]].target || fd.iuran;
+        if (st.status === "KURANG") {
+          return '<li><span class="avatar red">' + initials(m.name) + '</span><span class="who"><span class="nm">' + m.name + '</span><br /><span class="dt">' + fd.label + ' · baru bayar ' + rp(st.paid) + ' dari ' + rp(target) + '</span></span><span class="tag-kurang">Kurang ' + rp(target - st.paid) + '</span></li>';
+        }
+        return '<li><span class="avatar red">' + initials(m.name) + '</span><span class="who"><span class="nm">' + m.name + '</span><br /><span class="dt">' + fd.label + ' · iuran ' + rp(target) + '</span></span><span class="amt out">' + rp(target) + '</span></li>';
+      }
+      function arrearsHTML() {
+        function list(fundKey) {
+          return MEMBERS.filter(function (m) { return m[fundKey].status !== "LUNAS"; });
+        }
+        function block(fundKey) {
+          var l = list(fundKey);
+          if (!l.length) return { title: "Semua anggota sudah lunas", items: "", note: "Tidak ada tunggakan di " + FUND_DEF[fundKey].label + "." };
+          var adaKurang = l.some(function (m) { return m[fundKey].status === "KURANG"; });
+          return {
+            title: (adaKurang ? "Belum lunas" : "Belum bayar") + " (" + l.length + ")",
+            items: l.map(function (m) { return arrearsItemHTML(fundKey, m); }).join(""),
+            note: "Dihitung langsung dari data transaksi di Firebase."
+          };
+        }
+        if (currentFund === "kas") return block("kas");
+        if (currentFund === "seminar") return block("seminar");
+        var a = block("kas"), b = block("seminar");
+        var total = list("kas").length + list("seminar").length;
+        return {
+          title: "Belum lunas — semua dana (" + total + ")",
+          items: a.items + b.items,
+          note: "Dihitung langsung dari data transaksi di Firebase."
+        };
+      }
+
+      function renderBeranda() {
+        var f = FUNDS[currentFund];
+        document.getElementById("saldoLabel").textContent = currentFund === "semua" ? "Saldo gabungan (Kas Kelas + Dana Seminar)" : "Saldo " + f.label;
+        document.getElementById("saldoAmount").textContent = rp(f.saldo);
+        document.getElementById("saldoIn").textContent = rp(f.masuk);
+        document.getElementById("saldoOut").textContent = rp(f.keluar);
+        document.getElementById("statusFundLabel").textContent = f.label;
+        document.getElementById("iuranRows").innerHTML = f.iuranRows.map(function (r) {
+          return '<div class="info-row"><span class="k">' + r[0] + '</span><span class="v">' + r[1] + '</span></div>';
+        }).join("");
+
+        var qrisText;
+        if (currentFund === "kas") {
+          qrisText = 'Iuran Kas Kelas <strong>' + rp(DB.kelas.target || 10000) + '</strong> — scan, bayar, lalu kirim bukti ke Ketua Kelas, Arif Hidayat';
+        } else if (currentFund === "seminar") {
+          qrisText = 'Iuran Dana Seminar <strong>' + rp(DB.seminar.target || 77000) + '</strong> — scan, bayar, lalu kirim bukti ke Ketua Kelas, Arif Hidayat';
+        } else {
+          qrisText = 'Iuran Kas Kelas <strong>' + rp(DB.kelas.target || 10000) + '</strong> · Iuran Dana Seminar <strong>' + rp(DB.seminar.target || 77000) + '</strong> — scan, bayar, lalu kirim bukti ke Ketua Kelas, Arif Hidayat';
+        }
+        document.getElementById("qrisHelper").innerHTML = qrisText;
+        var qrisModalHelper = document.getElementById("qrisHelperModal");
+        if (qrisModalHelper) qrisModalHelper.innerHTML = qrisText;
+
+        var sb = document.getElementById("statusBlocks");
+        function blockFor(fk, withTitle) {
+          var lunas = MEMBERS.filter(function (m) { return m[fk].status === "LUNAS"; }).length;
+          var belum = MEMBERS.filter(function (m) { return m[fk].status === "BELUM"; }).length;
+          var kurang = MEMBERS.filter(function (m) { return m[fk].status === "KURANG"; }).length;
+          var label = kurang > 0 ? "Belum lunas" : "Belum bayar";
+          return statusBlockHTML(withTitle ? FUND_DEF[fk].label : "", lunas, MEMBERS.length, label, belum + kurang);
+        }
+        if (currentFund === "kas") sb.innerHTML = blockFor("kas", false);
+        else if (currentFund === "seminar") sb.innerHTML = blockFor("seminar", false);
+        else sb.innerHTML = blockFor("kas", true) + blockFor("seminar", true);
+        // Kartu pengeluaran terakhir mengikuti dana aktif
+        var expFund = currentFund === "seminar" ? "seminar" : "kas";
+        var outs = DB[MOD_OF[expFund]].tx.filter(function (x) { return x.t === "out"; });
+        var expList = document.querySelector("#expenseCard ul");
+        if (expList) {
+          if (!outs.length) {
+            expList.innerHTML = '<li><span class="who"><span class="dt">Belum ada pengeluaran di ' + FUND_DEF[expFund].label + '.</span></span></li>';
+          } else {
+            var last = outs[outs.length - 1];
+            expList.innerHTML = '<li><span class="avatar red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18l-1.5 9h-15z"/><path d="M3 6 2 3H0"/><circle cx="9" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/></svg></span>' +
+              '<span class="who"><span class="nm">' + (last.n || last.k || "Pengeluaran") + '</span><br /><span class="dt">' + fmtDate(last.d || "") + ' · ' + FUND_DEF[expFund].label + '</span></span>' +
+              '<span class="amt out">−' + rp(+last.a || 0) + '</span></li>';
+          }
+        }
+
+        var a = arrearsHTML();
+        document.getElementById("arrearsTitle").textContent = a.title;
+        document.getElementById("arrearsList").innerHTML = a.items;
+        document.getElementById("arrearsNote").textContent = a.note;
+
+        document.getElementById("expenseCard").style.display = currentFund === "seminar" ? "none" : "";
+      }
+
+      document.getElementById("fundSwitch").addEventListener("click", function (e) {
+        var btn = e.target.closest("button[data-fund]");
+        if (!btn) return;
+        currentFund = btn.getAttribute("data-fund");
+        this.querySelectorAll("button").forEach(function (b) { b.classList.toggle("active", b === btn); });
+        computeDerived();
+        renderBeranda();
+        renderTx();
+      });
+
+      // ---------- QRIS: ketuk untuk memperbesar ----------
+      var qrisOverlay = document.getElementById("qrisOverlay");
+      document.getElementById("qrisOpen").addEventListener("click", function () {
+        qrisOverlay.classList.add("open");
+      });
+      function closeQris() { qrisOverlay.classList.remove("open"); }
+      document.getElementById("qrisClose").addEventListener("click", closeQris);
+      qrisOverlay.addEventListener("click", function (e) { if (e.target === qrisOverlay) closeQris(); });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeQris(); });
+
+      // ---------- AKTIVITAS ----------
+      var filterType = "all";
+      var pendingDeleteId = null;
+
+      function iconSvg(type) {
+        if (type === "masuk") return '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>';
+        return '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>';
+      }
+
+      function filteredTx() {
+        var q = document.getElementById("txSearch").value.trim().toLowerCase();
+        var m = document.getElementById("txMonth").value;
+        return txData.filter(function (t) {
+          if (m !== "all" && t.date.slice(0, 7) !== m) return false;
+          if (filterType !== "all" && t.type !== filterType) return false;
+          if (q && (t.name + " " + t.note).toLowerCase().indexOf(q) === -1) return false;
+          return true;
+        }).sort(function (a, b) { return b.date.localeCompare(a.date) || b.id - a.id; });
+      }
+
+      function renderTx() {
+        var mSel = document.getElementById("txMonth");
+        if (mSel) {
+          var cur = mSel.value;
+          var months = {};
+          txData.forEach(function (t) { if (t.date) months[t.date.slice(0, 7)] = true; });
+          mSel.innerHTML = '<option value="all">Semua bulan</option>' + Object.keys(months).sort().reverse().map(function (k) { return '<option value="' + k + '">' + monthName(k) + '</option>'; }).join("");
+          mSel.value = months[cur] ? cur : "all";
+        }
+        var list = filteredTx();
+        var ul = document.getElementById("txList");
+        ul.innerHTML = list.map(function (t) {
+          return '<li class="tx-row">' +
+            '<span class="tx-ic ' + t.type + '">' + iconSvg(t.type) + '</span>' +
+            '<span class="tx-main"><span class="nm">' + t.name + '</span><br /><span class="dt">' + fmtDate(t.date) + ' · ' + t.note + '</span></span>' +
+            '<span class="tx-right"><span class="amt ' + (t.type === "masuk" ? "in" : "out") + '">' + (t.type === "masuk" ? "+" : "−") + rp(t.amount) + '</span>' +
+            (isAdmin ? '<button type="button" class="tx-del" data-del="' + t.id + '" aria-label="Hapus transaksi">×</button>' : '') + '</span>' +
+          '</li>';
+        }).join("");
+        document.getElementById("txEmpty").hidden = list.length > 0;
+        document.getElementById("txCount").textContent = "Menampilkan " + list.length + " dari " + txData.length + " transaksi";
+        var ts = document.getElementById("txSub");
+        if (ts) ts.textContent = "Transaksi " + (actFundKey() === "kas" ? "Kas Kelas" : "Dana Seminar") + " — ganti dana lewat pemilih di Beranda. Ketuk tanda × untuk menghapus (khusus Ketua Kelas) — akan muncul konfirmasi dulu.";
+      }
+
+      document.getElementById("txSearch").addEventListener("input", renderTx);
+      document.getElementById("txMonth").addEventListener("change", renderTx);
+      document.getElementById("txType").addEventListener("click", function (e) {
+        var btn = e.target.closest("button[data-type]");
+        if (!btn) return;
+        filterType = btn.getAttribute("data-type");
+        this.querySelectorAll("button").forEach(function (b) { b.classList.toggle("active", b === btn); });
+        renderTx();
+      });
+
+      // ---------- hapus dengan konfirmasi ----------
+      var overlay = document.getElementById("deleteOverlay");
+      document.getElementById("txList").addEventListener("click", function (e) {
+        var btn = e.target.closest("button[data-del]");
+        if (!btn) return;
+        pendingDeleteId = parseInt(btn.getAttribute("data-del"), 10);
+        var t = txData.filter(function (x) { return x.id === pendingDeleteId; })[0];
+        if (!t) return;
+        document.getElementById("deletePreview").innerHTML =
+          '<span><strong>' + t.name + '</strong><br /><span style="color:var(--ink-3);font-size:12.5px;">' + fmtDate(t.date) + '</span></span>' +
+          '<strong class="' + (t.type === "masuk" ? "" : "") + '" style="color:' + (t.type === "masuk" ? "var(--green)" : "var(--red)") + '">' + (t.type === "masuk" ? "+" : "−") + rp(t.amount) + '</strong>';
+        overlay.classList.add("open");
+      });
+      function closeDialog() { overlay.classList.remove("open"); pendingDeleteId = null; }
+      document.getElementById("deleteCancel").addEventListener("click", closeDialog);
+      overlay.addEventListener("click", function (e) { if (e.target === overlay) closeDialog(); });
+      document.getElementById("deleteConfirm").addEventListener("click", function () {
+        if (pendingDeleteId === null) return;
+        var t = txData.filter(function (x) { return x.id === pendingDeleteId; })[0];
+        if (t && t.xid) {
+          var modKey = MOD_OF[actFundKey()];
+          DB[modKey].tx = DB[modKey].tx.filter(function (x) { return x.id !== t.xid; });
+          saveFund(modKey);
+        }
+        closeDialog();
+        refreshAll();
+        showToast("Transaksi dihapus dan tersimpan di Firebase.");
+      });
+
+      // ---------- LAPORAN ----------
+      function monthRows(fundKey) {
+        var by = {};
+        DB[MOD_OF[fundKey]].tx.forEach(function (x) {
+          var k = (x.d || "").slice(0, 7) || "—";
+          if (!by[k]) by[k] = { masuk: 0, keluar: 0 };
+          if (x.t === "in") by[k].masuk += +x.a || 0; else by[k].keluar += +x.a || 0;
+        });
+        return Object.keys(by).sort().map(function (k) { return { k: k, masuk: by[k].masuk, keluar: by[k].keluar }; });
+      }
+      var MONTH_ID = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      function monthName(k) {
+        var p = k.split("-");
+        return (MONTH_ID[+p[1]] || k) + " " + (p[0] || "");
+      }
+      function buildTables() {
+        var tk = fundTotals("kas"), ts = fundTotals("seminar");
+        var rowsKas = monthRows("kas");
+        var htmlKas = '<table class="report"><thead><tr><th>Bulan</th><th class="num">Masuk</th><th class="num">Keluar</th></tr></thead><tbody>' +
+          (rowsKas.length ? rowsKas.map(function (r) { return '<tr><td>' + monthName(r.k) + '</td><td class="num">' + rp(r.masuk) + '</td><td class="num">' + rp(r.keluar) + '</td></tr>'; }).join("") : '<tr><td>Belum ada transaksi</td><td class="num">Rp0</td><td class="num">Rp0</td></tr>') +
+          '</tbody><tfoot><tr><td>Total</td><td class="num">' + rp(tk.masuk) + '</td><td class="num">' + rp(tk.keluar) + '</td></tr></tfoot></table>' +
+          '<p class="fineprint">Saldo akhir Kas Kelas: ' + rp(tk.masuk) + ' − ' + rp(tk.keluar) + ' = <strong>' + rp(tk.saldo) + '</strong>.</p>';
+        var semKurang = MEMBERS.filter(function (m) { return m.seminar.status === "KURANG"; });
+        var targetSem = DB.seminar.target || FUND_DEF.seminar.iuran;
+        var lunasSem = MEMBERS.filter(function (m) { return m.seminar.status === "LUNAS"; }).length;
+        var htmlSem = '<table class="report"><thead><tr><th>Keterangan</th><th class="num">Jumlah</th></tr></thead><tbody>' +
+          '<tr><td>Iuran lunas — ' + lunasSem + ' anggota × ' + rp(targetSem) + '</td><td class="num">' + rp(lunasSem * targetSem) + '</td></tr>' +
+          semKurang.map(function (m) { return '<tr><td>Bayar sebagian — ' + m.name + '</td><td class="num">' + rp(m.seminar.paid) + '</td></tr>'; }).join("") +
+          '<tr><td>Pengeluaran</td><td class="num">' + rp(ts.keluar) + '</td></tr>' +
+          '</tbody><tfoot><tr><td>Total masuk / saldo</td><td class="num">' + rp(ts.saldo) + '</td></tr></tfoot></table>' +
+          (semKurang.length ? '<p class="fineprint">Masih kurang: ' + semKurang.map(function (m) { return m.name + ' <strong>' + rp(targetSem - m.seminar.paid) + '</strong> (baru terbayar ' + rp(m.seminar.paid) + ')'; }).join("; ") + '.</p>' : '<p class="fineprint">Semua pembayar Dana Seminar sudah lunas.</p>');
+        var htmlAll = '<table class="report"><thead><tr><th>Dana</th><th class="num">Masuk</th><th class="num">Keluar</th><th class="num">Saldo</th></tr></thead><tbody>' +
+          '<tr><td>Kas Kelas</td><td class="num">' + rp(tk.masuk) + '</td><td class="num">' + rp(tk.keluar) + '</td><td class="num">' + rp(tk.saldo) + '</td></tr>' +
+          '<tr><td>Dana Seminar</td><td class="num">' + rp(ts.masuk) + '</td><td class="num">' + rp(ts.keluar) + '</td><td class="num">' + rp(ts.saldo) + '</td></tr>' +
+          '</tbody><tfoot><tr><td>Total</td><td class="num">' + rp(tk.masuk + ts.masuk) + '</td><td class="num">' + rp(tk.keluar + ts.keluar) + '</td><td class="num">' + rp(tk.saldo + ts.saldo) + '</td></tr></tfoot></table>';
+        return {
+          kas: { title: "Rincian per bulan — Kas Kelas", html: htmlKas },
+          seminar: { title: "Rincian penerimaan — Dana Seminar", html: htmlSem },
+          semua: { title: "Rincian gabungan — Semua Dana", html: htmlAll }
+        };
+      }
+      var TABLES = buildTables();
+      var reportFund = "kas";
+      function renderReport() {
+        TABLES = buildTables();
+        var f = FUNDS[reportFund];
+        document.getElementById("repIn").textContent = rp(f.masuk);
+        document.getElementById("repOut").textContent = rp(f.keluar);
+        document.getElementById("repSaldo").textContent = rp(f.saldo);
+        document.getElementById("repTableTitle").textContent = TABLES[reportFund].title;
+        document.getElementById("repTableWrap").innerHTML = TABLES[reportFund].html;
+        // Judul laporan selalu menyebut dana yang aktif
+        document.getElementById("reportTitle").textContent = "Laporan — " + f.label;
+        document.getElementById("reportSub").textContent = reportFund === "semua"
+          ? "Menampilkan gabungan Kas Kelas dan Dana Seminar. Ekspor di bawah berisi kedua dana plus total gabungan."
+          : "Menampilkan hanya " + f.label + ". Ekspor Excel, Gambar, dan Cetak/PDF mengikuti pilihan ini — data dana lain tidak ikut.";
+        // Daftar anggota yang tampil di layar hanya milik dana aktif ("semua" = keduanya)
+        var showKas = reportFund !== "seminar";
+        var showSem = reportFund !== "kas";
+        document.getElementById("repCardKasPaid").style.display = showKas ? "" : "none";
+        document.getElementById("repCardKasUnpaid").style.display = showKas ? "" : "none";
+        document.getElementById("repCardSemPaid").style.display = showSem ? "" : "none";
+        document.getElementById("repCardSemKurang").style.display = showSem ? "" : "none";
+        document.getElementById("repCardSemUnpaid").style.display = showSem ? "" : "none";
+        // Label cakupan pada kartu ekspor
+        document.getElementById("exportScopeLabel").textContent = reportFund === "semua" ? "Kas Kelas + Dana Seminar" : "hanya " + f.label;
+        document.getElementById("exportNote").textContent = reportFund === "semua"
+          ? "Berkas yang diunduh berisi kedua dana (Kas Kelas dan Dana Seminar) plus total gabungan " + rp(FUNDS.semua.saldo) + "."
+          : "Berkas yang diunduh hanya berisi data " + f.label + " — tidak ada angka, nama, atau bagian dana lain di dalamnya.";
+      }
+      // Daftar status anggota Kas Kelas — selalu tampil di Laporan agar siap dibagikan ke grup kelas
+      function renderReportLists() {
+        function nm(m) { return m.name; }
+        var paidKas = MEMBERS.filter(function (m) { return m.kas.status === "LUNAS"; }).map(nm).sort(function (a, b) { return a.localeCompare(b, "id"); });
+        var unpaidKas = MEMBERS.filter(function (m) { return m.kas.status === "BELUM"; }).map(nm);
+        var kurangKas = MEMBERS.filter(function (m) { return m.kas.status === "KURANG"; });
+        var semPaid = MEMBERS.filter(function (m) { return m.seminar.status === "LUNAS"; }).map(nm).sort(function (a, b) { return a.localeCompare(b, "id"); });
+        var semUnpaid = MEMBERS.filter(function (m) { return m.seminar.status === "BELUM"; }).map(nm);
+        var semKurang = MEMBERS.filter(function (m) { return m.seminar.status === "KURANG"; });
+        var targetKas = DB.kelas.target || FUND_DEF.kas.iuran, targetSem = DB.seminar.target || FUND_DEF.seminar.iuran;
+        function li(n, red) {
+          return '<li><span class="avatar' + (red ? ' red' : '') + '">' + initials(n) + '</span><span class="who"><span class="nm">' + n + '</span></span></li>';
+        }
+        var hKasPaid = document.querySelector("#repCardKasPaid h2"); if (hKasPaid) hKasPaid.textContent = "Sudah Bayar — Kas Kelas (" + paidKas.length + ")";
+        document.getElementById("reportPaidList").innerHTML = paidKas.map(function (n) { return li(n, false); }).join("");
+        var hKasUn = document.querySelector("#repCardKasUnpaid h2"); if (hKasUn) hKasUn.textContent = "Belum Lunas — Kas Kelas (" + (unpaidKas.length + kurangKas.length) + ")";
+        document.getElementById("reportUnpaidList").innerHTML =
+          unpaidKas.map(function (n) { return li(n, true); }).join("") +
+          kurangKas.map(function (m) {
+            return '<li><span class="avatar red">' + initials(m.name) + '</span><span class="who"><span class="nm">' + m.name + '</span><br /><span class="dt">Baru bayar ' + rp(m.kas.paid) + ' dari ' + rp(targetKas) + '</span></span><span class="tag-kurang">KURANG ' + rp(targetKas - m.kas.paid) + '</span></li>';
+          }).join("");
+        var hSemPaid = document.querySelector("#repCardSemPaid h2"); if (hSemPaid) hSemPaid.textContent = "Sudah Bayar — Dana Seminar (" + semPaid.length + " Lunas)";
+        document.getElementById("reportSemPaidList").innerHTML = semPaid.map(function (n) { return li(n, false); }).join("");
+        var cardKurang = document.getElementById("repCardSemKurang");
+        if (cardKurang) {
+          cardKurang.style.display = (reportFund !== "kas" && semKurang.length) ? "" : "none";
+          var hK = cardKurang.querySelector("h2"); if (hK) hK.textContent = "Kurang Bayar — Dana Seminar (" + semKurang.length + ")";
+          var ulK = cardKurang.querySelector("ul");
+          if (ulK) ulK.innerHTML = semKurang.map(function (m) {
+            return '<li><span class="avatar red">' + initials(m.name) + '</span><span class="who"><span class="nm">' + m.name + '</span><br /><span class="dt">Baru bayar ' + rp(m.seminar.paid) + ' dari iuran ' + rp(targetSem) + '</span></span><span class="tag-kurang">KURANG ' + rp(targetSem - m.seminar.paid) + '</span></li>';
+          }).join("");
+        }
+        var hSemUn = document.querySelector("#repCardSemUnpaid h2"); if (hSemUn) hSemUn.textContent = "Belum Bayar — Dana Seminar (" + semUnpaid.length + ")";
+        document.getElementById("reportSemUnpaidList").innerHTML = semUnpaid.map(function (n) { return li(n, true); }).join("");
+      }
+      document.getElementById("reportSwitch").addEventListener("click", function (e) {
+        var btn = e.target.closest("button[data-rfund]");
+        if (!btn) return;
+        reportFund = btn.getAttribute("data-rfund");
+        this.querySelectorAll("button").forEach(function (b) { b.classList.toggle("active", b === btn); });
+        renderReport();
+      });
+      // ---------- EKSPOR PER DANA ----------
+      // Seluruh isi ekspor dibangun HANYA dari dana yang aktif (reportFund).
+      function buildExportData() {
+        function rowsPaid(fundKey) {
+          return MEMBERS.filter(function (m) { return m[fundKey].status === "LUNAS"; })
+            .slice().sort(function (a, b) { return a.name.localeCompare(b.name, "id"); })
+            .map(function (m) {
+              var fd = FUND_DEF[fundKey], target = DB[MOD_OF[fundKey]].target || fd.iuran;
+              var lastDate = "";
+              DB[MOD_OF[fundKey]].tx.forEach(function (x) { if (x.t === "in" && x.m === m.no && x.d > lastDate) lastDate = x.d; });
+              return [m.name, "Iuran " + rp(target) + (lastDate ? " · " + fmtDate(lastDate) : ""), "LUNAS"];
+            });
+        }
+        function rowsBelum(fundKey) {
+          var fd = FUND_DEF[fundKey], target = DB[MOD_OF[fundKey]].target || fd.iuran;
+          return MEMBERS.filter(function (m) { return m[fundKey].status === "BELUM"; })
+            .map(function (m) { return [m.name, fd.label + " · iuran " + rp(target) + " · belum dibayar", "BELUM"]; });
+        }
+        function rowsKurang(fundKey) {
+          var fd = FUND_DEF[fundKey], target = DB[MOD_OF[fundKey]].target || fd.iuran;
+          return MEMBERS.filter(function (m) { return m[fundKey].status === "KURANG"; })
+            .map(function (m) { return [m.name, "Baru bayar " + rp(m[fundKey].paid) + " dari iuran " + rp(target), "KURANG " + rp(target - m[fundKey].paid)]; });
+        }
+        function listsFor(fundKey) {
+          var fd = FUND_DEF[fundKey], out = [];
+          var p = rowsPaid(fundKey); out.push({ title: "Sudah Bayar — " + fd.label + " (" + p.length + ")", rows: p });
+          var k = rowsKurang(fundKey); if (k.length) out.push({ title: "Kurang Bayar — " + fd.label + " (" + k.length + ")", rows: k });
+          var b = rowsBelum(fundKey); out.push({ title: "Belum Bayar — " + fd.label + " (" + b.length + ")", rows: b });
+          return out;
+        }
+        var tk = fundTotals("kas"), ts = fundTotals("seminar");
+        if (reportFund === "kas") {
+          var rk = monthRows("kas");
+          return {
+            label: "Kas Kelas", slug: "kas-kelas",
+            summary: [["Total Masuk", rp(tk.masuk)], ["Total Keluar", rp(tk.keluar)], ["Saldo", rp(tk.saldo)]],
+            tableTitle: "Rincian per bulan — Kas Kelas",
+            tableHead: ["Bulan", "Masuk", "Keluar"],
+            tableRows: rk.length ? rk.map(function (r) { return [monthName(r.k), rp(r.masuk), rp(r.keluar)]; }) : [["Belum ada transaksi", "Rp0", "Rp0"]],
+            tableFoot: ["Total", rp(tk.masuk), rp(tk.keluar)],
+            tableNote: "Saldo akhir Kas Kelas: " + rp(tk.masuk) + " − " + rp(tk.keluar) + " = " + rp(tk.saldo) + ".",
+            lists: listsFor("kas")
+          };
+        }
+        if (reportFund === "seminar") {
+          var targetSem = DB.seminar.target || FUND_DEF.seminar.iuran;
+          var lunasSem = MEMBERS.filter(function (m) { return m.seminar.status === "LUNAS"; }).length;
+          var kurangSem = MEMBERS.filter(function (m) { return m.seminar.status === "KURANG"; });
+          var semRows = [["Iuran lunas — " + lunasSem + " anggota × " + rp(targetSem), rp(lunasSem * targetSem)]];
+          kurangSem.forEach(function (m) { semRows.push(["Bayar sebagian — " + m.name, rp(m.seminar.paid)]); });
+          semRows.push(["Pengeluaran", rp(ts.keluar)]);
+          return {
+            label: "Dana Seminar", slug: "dana-seminar",
+            summary: [["Total Masuk", rp(ts.masuk)], ["Total Keluar", rp(ts.keluar)], ["Saldo", rp(ts.saldo)]],
+            tableTitle: "Rincian penerimaan — Dana Seminar",
+            tableHead: ["Keterangan", "Jumlah"],
+            tableRows: semRows,
+            tableFoot: ["Total masuk / saldo", rp(ts.saldo)],
+            tableNote: kurangSem.length
+              ? "Masih kurang: " + kurangSem.map(function (m) { return m.name + " " + rp(targetSem - m.seminar.paid) + " (dari iuran " + rp(targetSem) + ", baru terbayar " + rp(m.seminar.paid) + ")"; }).join("; ") + "."
+              : "Semua pembayar Dana Seminar sudah lunas.",
+            lists: listsFor("seminar")
+          };
+        }
+        return {
+          label: "Semua Dana", slug: "semua-dana",
+          summary: [["Total Masuk", rp(tk.masuk + ts.masuk)], ["Total Keluar", rp(tk.keluar + ts.keluar)], ["Saldo Gabungan", rp(tk.saldo + ts.saldo)]],
+          tableTitle: "Rincian gabungan — Semua Dana",
+          tableHead: ["Dana", "Masuk", "Keluar", "Saldo"],
+          tableRows: [["Kas Kelas", rp(tk.masuk), rp(tk.keluar), rp(tk.saldo)], ["Dana Seminar", rp(ts.masuk), rp(ts.keluar), rp(ts.saldo)]],
+          tableFoot: ["Total", rp(tk.masuk + ts.masuk), rp(tk.keluar + ts.keluar), rp(tk.saldo + ts.saldo)],
+          tableNote: "Saldo gabungan: " + rp(tk.saldo) + " + " + rp(ts.saldo) + " = " + rp(tk.saldo + ts.saldo) + ".",
+          lists: listsFor("kas").concat(listsFor("seminar"))
+        };
+      }
+
+      function downloadBlob(blob, filename) {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+      }
+      function escHtml(s) {
+        return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      }
+      function reportDocHTML(d, forPrint) {
+        var h = '<h1 style="font-size:20px;margin:0 0 2px;">Laporan — ' + escHtml(d.label) + '</h1>' +
+          '<p style="color:#4c5d55;font-size:13px;margin:0 0 14px;">KasBoard CK05 · Kelas 01IKOK005 — Ilmu Komunikasi, UNPAM · Periode 2025 - 2026</p>';
+        h += '<table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse;font-size:13px;margin-bottom:16px;"><tr><th align="left">Ringkasan</th><th align="right">Jumlah</th></tr>' +
+          d.summary.map(function (r) { return '<tr><td>' + escHtml(r[0]) + '</td><td align="right">' + escHtml(r[1]) + '</td></tr>'; }).join("") + '</table>';
+        h += '<h2 style="font-size:15px;margin:16px 0 6px;">' + escHtml(d.tableTitle) + '</h2>' +
+          '<table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse;font-size:13px;margin-bottom:6px;"><tr>' +
+          d.tableHead.map(function (c) { return '<th align="left">' + escHtml(c) + '</th>'; }).join("") + '</tr>' +
+          d.tableRows.map(function (r) { return '<tr>' + r.map(function (c) { return '<td>' + escHtml(c) + '</td>'; }).join("") + '</tr>'; }).join("") +
+          '<tr>' + d.tableFoot.map(function (c) { return '<td><strong>' + escHtml(c) + '</strong></td>'; }).join("") + '</tr></table>' +
+          '<p style="color:#4c5d55;font-size:12.5px;margin:0 0 8px;">' + escHtml(d.tableNote) + '</p>';
+        d.lists.forEach(function (L) {
+          h += '<h2 style="font-size:15px;margin:16px 0 6px;">' + escHtml(L.title) + '</h2>' +
+            '<table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse;font-size:13px;"><tr><th align="left">Nama</th><th align="left">Keterangan</th><th align="left">Status</th></tr>' +
+            L.rows.map(function (r) { return '<tr><td>' + escHtml(r[0]) + '</td><td>' + escHtml(r[1]) + '</td><td>' + escHtml(r[2]) + '</td></tr>'; }).join("") + '</table>';
+        });
+        if (forPrint) {
+          return '<!doctype html><html lang="id"><head><meta charset="utf-8" /><title>Laporan — ' + escHtml(d.label) + ' · KasBoard CK05</title>' +
+            '<style>body{font-family:Arial,Helvetica,sans-serif;color:#15211c;margin:32px;}table{width:100%;}th{background:#e2f1ed;}@media print{body{margin:12px;}}</style></head><body>' +
+            h + '<p style="color:#7d8f86;font-size:12px;margin-top:18px;">Gunakan menu Cetak → Simpan sebagai PDF di browser untuk membuat PDF dari halaman ini.</p></body></html>';
+        }
+        return '<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8" /></head><body>' + h + '</body></html>';
+      }
+
+      function exportExcel() {
+        var d = buildExportData();
+        var blob = new Blob(["\ufeff" + reportDocHTML(d, false)], { type: "application/vnd.ms-excel;charset=utf-8" });
+        downloadBlob(blob, "laporan-" + d.slug + "-ck05.xls");
+        showToast("Excel " + d.label + " diunduh — isinya hanya data " + d.label + ".");
+      }
+
+      function exportPdf() {
+        var d = buildExportData();
+        var blob = new Blob([reportDocHTML(d, true)], { type: "text/html;charset=utf-8" });
+        downloadBlob(blob, "laporan-" + d.slug + "-ck05-cetak.html");
+        showToast("Dokumen cetak " + d.label + " diunduh — buka lalu Cetak → Simpan sebagai PDF.");
+      }
+
+      function exportGambar() {
+        var d = buildExportData();
+        // Susun baris teks persis dari isi laporan yang tampil untuk dana aktif
+        var lines = [];
+        lines.push({ t: "Laporan — " + d.label, s: "title" });
+        lines.push({ t: "KasBoard CK05 · Kelas 01IKOK005 — Ilmu Komunikasi, UNPAM · Periode 2025 - 2026", s: "sub" });
+        lines.push({ t: "", s: "gap" });
+        d.summary.forEach(function (r) { lines.push({ t: r[0] + ":  " + r[1], s: "body" }); });
+        lines.push({ t: "", s: "gap" });
+        lines.push({ t: d.tableTitle, s: "head" });
+        lines.push({ t: d.tableHead.join("   ·   "), s: "dim" });
+        d.tableRows.forEach(function (r) { lines.push({ t: r.join("   ·   "), s: "body" }); });
+        lines.push({ t: d.tableFoot.join("   ·   "), s: "bold" });
+        lines.push({ t: d.tableNote, s: "dim" });
+        d.lists.forEach(function (L) {
+          lines.push({ t: "", s: "gap" });
+          lines.push({ t: L.title, s: "head" });
+          L.rows.forEach(function (r) { lines.push({ t: r[0] + " — " + r[2], s: "body" }); });
+        });
+
+        var W = 880, PAD = 44, LH = 27;
+        var meas = document.createElement("canvas").getContext("2d");
+        function wrap(text, font, maxW) {
+          meas.font = font;
+          if (meas.measureText(text).width <= maxW) return [text];
+          var words = text.split(" "), out = [], cur = "";
+          words.forEach(function (w) {
+            var test = cur ? cur + " " + w : w;
+            if (meas.measureText(test).width > maxW && cur) { out.push(cur); cur = w; } else cur = test;
+          });
+          if (cur) out.push(cur);
+          return out;
+        }
+        var FONTS = {
+          title: "800 30px 'Plus Jakarta Sans', sans-serif",
+          sub: "500 15px 'Plus Jakarta Sans', sans-serif",
+          head: "700 19px 'Plus Jakarta Sans', sans-serif",
+          body: "500 16.5px 'Plus Jakarta Sans', sans-serif",
+          bold: "800 16.5px 'Plus Jakarta Sans', sans-serif",
+          dim: "500 14.5px 'Plus Jakarta Sans', sans-serif"
+        };
+        var flat = [];
+        lines.forEach(function (L) {
+          if (L.s === "gap") { flat.push({ t: "", s: "gap" }); return; }
+          wrap(L.t, FONTS[L.s], W - PAD * 2).forEach(function (w) { flat.push({ t: w, s: L.s }); });
+        });
+        var H = PAD * 2 + flat.length * LH + 26;
+        var scale = 2;
+        var cv = document.createElement("canvas");
+        cv.width = W * scale; cv.height = H * scale;
+        var ctx = cv.getContext("2d");
+        ctx.scale(scale, scale);
+        ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = "#0c6b5d"; ctx.fillRect(0, 0, W, 10);
+        var y = PAD + 8;
+        flat.forEach(function (L) {
+          if (L.s !== "gap") {
+            ctx.font = FONTS[L.s];
+            ctx.fillStyle = L.s === "title" ? "#15211c" : (L.s === "head" ? "#0c6b5d" : (L.s === "sub" || L.s === "dim" ? "#7d8f86" : "#24352d"));
+            ctx.fillText(L.t, PAD, y);
+          }
+          y += LH;
+        });
+        ctx.font = FONTS.dim; ctx.fillStyle = "#7d8f86";
+        ctx.fillText("KasBoard CK05 — data langsung dari Firebase kasboard-ck05.", PAD, H - PAD + 16);
+        if (cv.toBlob) {
+          cv.toBlob(function (blob) {
+            if (blob) downloadBlob(blob, "laporan-" + d.slug + "-ck05.jpg");
+            showToast("Gambar " + d.label + " diunduh — isinya hanya data " + d.label + ".");
+          }, "image/jpeg", 0.92);
+        } else {
+          var a = document.createElement("a");
+          a.href = cv.toDataURL("image/jpeg", 0.92);
+          a.download = "laporan-" + d.slug + "-ck05.jpg";
+          document.body.appendChild(a); a.click(); a.remove();
+          showToast("Gambar " + d.label + " diunduh — isinya hanya data " + d.label + ".");
+        }
+      }
+
+      document.querySelectorAll(".btn-export").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var type = b.getAttribute("data-export-type");
+          if (type === "excel") exportExcel();
+          else if (type === "gambar") exportGambar();
+          else if (type === "pdf") exportPdf();
+        });
+      });
+
+      // ---------- navigasi bawah ----------
+      document.querySelectorAll(".nav-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var target = btn.getAttribute("data-page");
+          document.querySelectorAll(".nav-btn").forEach(function (b) { b.classList.toggle("active", b === btn); });
+          document.querySelectorAll(".page").forEach(function (p) { p.classList.toggle("active", p.id === "page-" + target); });
+          window.scrollTo({ top: 0 });
+        });
+      });
+
+      // ---------- autentikasi Firebase (sistem sama seperti aplikasi lama) ----------
+      var currentUser = null;
+      var authMode = "login"; // login | register | reset
+      var authBusy = false;
+      async function nimHash(n) {
+        var key = await crypto.subtle.importKey("raw", new TextEncoder().encode(String(n).trim()), "PBKDF2", false, ["deriveBits"]);
+        var bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: new TextEncoder().encode("kasboard-ck05"), iterations: 200000 }, key, 256);
+        return Array.from(new Uint8Array(bits)).map(function (x) { return x.toString(16).padStart(2, "0"); }).join("");
+      }
+      function authError(msg) {
+        var err = document.getElementById("loginError");
+        if (!msg) { err.classList.remove("show"); err.textContent = ""; return; }
+        err.textContent = msg;
+        err.classList.add("show");
+      }
+      function setAuthMode(mode) {
+        authMode = mode;
+        authError("");
+        document.getElementById("nimField").hidden = mode === "login";
+        document.getElementById("code2Field").hidden = mode === "login";
+        document.getElementById("authSwitch").hidden = mode !== "login";
+        document.getElementById("authBack").hidden = mode === "login";
+        document.getElementById("loginBtn").textContent = mode === "login" ? "Masuk" : (mode === "register" ? "Daftar" : "Atur ulang kode");
+        document.getElementById("authSub").textContent = mode === "login"
+          ? "Masuk untuk mengelola keuangan kelas 01IKOK005."
+          : (mode === "register" ? "Daftar dengan nama + NIM sesuai data kelas, lalu buat kode akses kamu." : "Atur ulang kode akses dengan verifikasi NIM.");
+        document.getElementById("authNote").textContent = mode === "login"
+          ? "Masuk cukup nama + kode akses kamu. Belum pernah daftar? Klik Daftar sekarang."
+          : "Kode akses minimal 6 karakter dan hanya tersimpan sebagai akun Firebase kamu sendiri.";
+      }
+      document.getElementById("toRegister").addEventListener("click", function (e) { e.preventDefault(); setAuthMode("register"); });
+      document.getElementById("toReset").addEventListener("click", function (e) { e.preventDefault(); setAuthMode("reset"); });
+      document.getElementById("toLogin").addEventListener("click", function (e) { e.preventDefault(); setAuthMode("login"); });
+      ["loginName", "loginCode", "loginNim", "loginCode2"].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener("input", function () { authError(""); });
+      });
+
+      document.getElementById("loginForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        if (!FB || !FB.ready) { authError("Firebase belum siap. Periksa koneksi internet lalu coba lagi."); return; }
+        if (authBusy) return;
+        var nameIn = document.getElementById("loginName").value;
+        var codeIn = document.getElementById("loginCode").value;
+        var m = memByName(nameIn);
+        if (!m) { authError("Nama tidak ditemukan di daftar kelas. Isi nama sesuai daftar mahasiswa."); return; }
+        authBusy = true;
+        try {
+          if (authMode === "login") {
+            if (!codeIn) { authError("Isi kode akses kamu."); authBusy = false; return; }
+            await FB.login(FB.email(m.no), codeIn);
+            document.getElementById("loginCode").value = "";
+          } else {
+            var nim = document.getElementById("loginNim").value.replace(/\D/g, "");
+            var code2 = document.getElementById("loginCode2").value;
+            if (!nim) { authError("Isi NIM kamu untuk verifikasi."); authBusy = false; return; }
+            var h = await nimHash(nim);
+            if (h !== m.hash) { authError("NIM tidak sesuai dengan nama ini. Pendaftaran tidak dapat dilanjutkan."); authBusy = false; return; }
+            if (codeIn.length < 6) { authError("Kode akses minimal 6 karakter."); authBusy = false; return; }
+            if (codeIn !== code2) { authError("Kode akses tidak sama."); authBusy = false; return; }
+            if (authMode === "register") {
+              try {
+                await FB.signup(FB.email(m.no), codeIn);
+              } catch (e2) {
+                if (e2 && e2.code === "auth/email-already-in-use") { authError("Akun sudah terdaftar. Silakan masuk, atau pakai Atur ulang kode bila lupa."); }
+                else { authError("Gagal membuat akun: " + ((e2 && e2.code) || "coba lagi")); }
+                authBusy = false; return;
+              }
+              showToast("Akun berhasil dibuat. Selamat bergabung, " + tcName(m.name) + "!");
+            } else {
+              // atur ulang: masuk sesi sementara -> ganti kata sandi -> keluar
+              try { await FB.logout(); } catch (e3) {}
+              try {
+                await FB.signup(FB.email(m.no), codeIn);
+                await FB.chpw(codeIn, codeIn);
+              } catch (e4) {
+                try { await FB.logout(); } catch (e5) {}
+                authError("Akun lama masih terdaftar, jadi kode tidak bisa diatur ulang dari sini. Minta Ketua Kelas menghapus akun lama kamu di Firebase, lalu daftar lagi.");
+                authBusy = false; return;
+              }
+              showToast("Kode akses diatur ulang. Silakan masuk dengan kode baru.");
+            }
+            document.getElementById("loginCode").value = "";
+            document.getElementById("loginCode2").value = "";
+          }
+        } catch (err) {
+          if (authMode === "login") {
+            if (err && err.code === "auth/network-request-failed") authError("Tidak ada koneksi internet.");
+            else authError("Nama atau kode akses salah, atau akun belum terdaftar.");
+          } else {
+            authError("Gagal: " + ((err && err.code) || "coba lagi"));
+          }
+        }
+        authBusy = false;
+      });
+
+      function applySession(u) {
+        if (!u || !u.email) { return; }
+        var no = parseInt(String(u.email).split("@")[0].slice(1), 10);
+        var b = memByNo(no);
+        if (!b) return;
+        ME = { no: no, name: tcName(b.name) };
+        isAdmin = (FB.admins || []).indexOf(no) >= 0;
+        currentUser = { name: ME.name, role: isAdmin ? "Ketua Kelas" : "Anggota Kelas" };
+        document.getElementById("greetingName").textContent = b.name;
+        document.getElementById("greetingRole").textContent = isAdmin ? "Ketua Kelas" : "Anggota Kelas 01IKOK005";
+        document.getElementById("sayaSub").textContent = b.name + " · " + (isAdmin ? "Ketua Kelas" : "Anggota");
+        var tplItem = document.getElementById("menuTplItem");
+        if (tplItem) tplItem.style.display = isAdmin ? "" : "none";
+        var cr = document.getElementById("catatRow");
+        if (cr) cr.hidden = !isAdmin;
+        document.getElementById("loginView").hidden = true;
+        document.getElementById("appView").hidden = false;
+        window.scrollTo({ top: 0 });
+        subscribeData();
+        refreshAll();
+      }
+      function clearSession() {
+        ME = null; isAdmin = false; currentUser = null;
+        document.getElementById("appView").hidden = true;
+        document.getElementById("loginView").hidden = false;
+        document.getElementById("loginCode").value = "";
+        setAuthMode("login");
+        document.querySelectorAll(".nav-btn").forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-page") === "beranda"); });
+        document.querySelectorAll(".page").forEach(function (p) { p.classList.toggle("active", p.id === "page-beranda"); });
+        window.scrollTo({ top: 0 });
+      }
+      document.querySelectorAll("[data-logout]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          if (FB && FB.ready) { FB.logout().catch(function () {}); }
+          clearSession();
+        });
+      });
+
+      // ---------- catat transaksi (khusus admin) ----------
+      var catatType = "in";
+      var KAT = { "in": ["Kas Kelas", "Kolektif Seminar", "Lainnya"], "out": ["Kas Kelas", "Kolektif Seminar", "Lainnya"] };
+      function actFundKey() { return (typeof currentFund !== "undefined" && currentFund === "seminar") ? "seminar" : "kas"; }
+      function openCatat(type) {
+        catatType = type;
+        var fk = actFundKey(), fd = FUND_DEF[fk];
+        document.getElementById("catatTitle").textContent = (type === "in" ? "Catat pemasukan" : "Catat pengeluaran") + " · " + fd.label;
+        document.getElementById("catatMemberField").hidden = type !== "in";
+        var memSel = document.getElementById("catatMember");
+        memSel.innerHTML = '<option value="0">Umum / lainnya</option>' + MEMBERS_BASE.map(function (b) {
+          return '<option value="' + b.no + '">' + tcName(b.name) + '</option>';
+        }).join("");
+        var katSel = document.getElementById("catatKat");
+        var defKat = fk === "kas" ? "Kas Kelas" : "Kolektif Seminar";
+        katSel.innerHTML = KAT[type].map(function (k) { return '<option' + (k === defKat ? ' selected' : '') + '>' + k + '</option>'; }).join("");
+        document.getElementById("catatAmount").value = type === "in" ? (DB[MOD_OF[fk]].target || fd.iuran) : "";
+        document.getElementById("catatDate").value = new Date().toISOString().slice(0, 10);
+        document.getElementById("catatNote").value = "";
+        document.getElementById("catatOverlay").classList.add("open");
+      }
+      function closeCatat() { document.getElementById("catatOverlay").classList.remove("open"); }
+      document.getElementById("catatIn").addEventListener("click", function () { openCatat("in"); });
+      document.getElementById("catatOut").addEventListener("click", function () { openCatat("out"); });
+      document.getElementById("catatCancel").addEventListener("click", closeCatat);
+      document.getElementById("catatOverlay").addEventListener("click", function (e) { if (e.target === this) closeCatat(); });
+      document.getElementById("catatForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!isAdmin) { showToast("Hanya Ketua Kelas yang boleh mencatat data."); return; }
+        var a = parseInt(document.getElementById("catatAmount").value, 10);
+        if (!a || a <= 0) { document.getElementById("catatAmount").focus(); return; }
+        var fk = actFundKey(), modKey = MOD_OF[fk];
+        DB[modKey].tx.push({
+          id: Date.now().toString(36),
+          t: catatType,
+          k: document.getElementById("catatKat").value,
+          d: document.getElementById("catatDate").value || new Date().toISOString().slice(0, 10),
+          m: catatType === "in" ? parseInt(document.getElementById("catatMember").value, 10) : 0,
+          a: a,
+          n: document.getElementById("catatNote").value.trim()
+        });
+        saveFund(modKey);
+        closeCatat();
+        refreshAll();
+        showToast("Transaksi tersimpan ke Firebase.");
+      });
+
+      // ---------- halaman Saya: ganti kode & template WA ----------
+      document.getElementById("menuChpw").addEventListener("click", async function () {
+        if (!FB || !FB.ready || !ME) return;
+        var oldPw = window.prompt("Kode akses saat ini:");
+        if (oldPw === null) return;
+        var newPw = window.prompt("Kode akses baru (min. 6 karakter):");
+        if (newPw === null) return;
+        if (newPw.length < 6) { showToast("Kode akses minimal 6 karakter."); return; }
+        try {
+          await FB.chpw(oldPw, newPw);
+          showToast("Kode akses kamu diganti.");
+        } catch (e) {
+          showToast("Kode akses saat ini salah atau gagal diganti.");
+        }
+      });
+      var tplFundKey = "kas";
+      document.getElementById("menuTpl").addEventListener("click", function () {
+        tplFundKey = actFundKey();
+        document.getElementById("tplTitle").textContent = "Template WhatsApp · " + FUND_DEF[tplFundKey].label;
+        document.getElementById("tplText").value = DB[MOD_OF[tplFundKey]].tpl || TPL_DEFAULT[tplFundKey];
+        document.getElementById("tplOverlay").classList.add("open");
+      });
+      function closeTpl() { document.getElementById("tplOverlay").classList.remove("open"); }
+      document.getElementById("tplCancel").addEventListener("click", closeTpl);
+      document.getElementById("tplOverlay").addEventListener("click", function (e) { if (e.target === this) closeTpl(); });
+      document.getElementById("tplSave").addEventListener("click", function () {
+        if (!isAdmin) { showToast("Hanya Ketua Kelas yang boleh mengubah template."); return; }
+        var v = document.getElementById("tplText").value.trim();
+        var modKey = MOD_OF[tplFundKey];
+        DB[modKey].tpl = (v && v !== TPL_DEFAULT[tplFundKey]) ? v : "";
+        saveFund(modKey);
+        closeTpl();
+        showToast("Template disimpan.");
+      });
+
+
+      // ---------- ANGGOTA & WHATSAPP ----------
+      var WA_ICON = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413"/></svg>';
+      function statusTagHTML(fund, fundKey) {
+        var target = DB[MOD_OF[fundKey]].target || FUND_DEF[fundKey].iuran;
+        if (fund.status === "LUNAS") return '<span class="tag-lunas">LUNAS</span>';
+        if (fund.status === "KURANG") return '<span class="tag-kurang-sm">KURANG ' + rp(target - fund.paid) + '</span>';
+        return '<span class="tag-belum">BELUM</span>';
+      }
+      function renderAnggota() {
+        var sub = document.getElementById("memberFundSub");
+        if (sub) sub.textContent = "Kas Kelas " + rp(DB.kelas.target || FUND_DEF.kas.iuran) + " · Dana Seminar " + rp(DB.seminar.target || FUND_DEF.seminar.iuran);
+        var el = document.getElementById("memberList");
+        if (!el) return;
+        el.innerHTML = MEMBERS.map(function (m, idx) {
+          var isPaidAny = m.kas.status === "BELUM" && m.seminar.status === "BELUM";
+          return '<li>' +
+            '<span class="avatar' + (isPaidAny ? ' red' : '') + '">' + initials(m.name) + '</span>' +
+            '<span class="who"><span class="nm">' + m.name + '</span>' +
+            '<span class="member-status"><span class="fund-name">Kas Kelas</span>' + statusTagHTML(m.kas, "kas") +
+            '<span class="fund-name">· Dana Seminar</span>' + statusTagHTML(m.seminar, "seminar") + '</span></span>' +
+            '<button type="button" class="wa-btn" data-wa="' + idx + '" aria-label="Kirim WhatsApp ke ' + m.name + '" title="WhatsApp — ' + m.name + '">' + WA_ICON + '</button>' +
+          '</li>';
+        }).join("");
+      }
+      var TPL_DEFAULT = {
+        kas: "Halo {nama},\nPengingat iuran Kas Kelas MOODBOARD CK05.\n\nIuran: {target}\nSudah dibayar: {dibayar}\nKekurangan: {kurang}\n\nMohon dilunasi ya. Pembayaran bisa langsung ke ketua kelas. Jika sudah membayar, abaikan pesan ini.\n\nTerima kasih.\nArif Hidayat, Ketua Kelas CK05",
+        seminar: "Halo {nama},\nPengingat iuran Dana Seminar MOODBOARD CK05.\n\nIuran: {target}\nSudah dibayar: {dibayar}\nKekurangan: {kurang}\n\nMohon dilunasi ya. Pembayaran bisa langsung ke ketua kelas. Jika sudah membayar, abaikan pesan ini.\n\nTerima kasih.\nArif Hidayat, Ketua Kelas CK05"
+      };
+      var TPL_LUNAS = "Halo {nama}, terima kasih. Iuran {saku} Anda sudah lunas ({dibayar}).";
+      function waMessageFor(member, fundKey) {
+        var fd = FUND_DEF[fundKey], st = member[fundKey];
+        var target = DB[MOD_OF[fundKey]].target || 0;
+        var F = {
+          nama: member.name,
+          target: target ? rp(target) : "(belum ditetapkan)",
+          dibayar: rp(st.paid),
+          kurang: target ? rp(Math.max(0, target - st.paid)) : "-",
+          saku: fd.label,
+          bendahara: ME ? ME.name : "Ketua Kelas"
+        };
+        var tpl = st.status === "LUNAS" ? TPL_LUNAS : (DB[MOD_OF[fundKey]].tpl || TPL_DEFAULT[fundKey]);
+        return tpl.replace(/\{(\w+)\}/g, function (mm, k) { return F[k] !== undefined ? F[k] : mm; });
+      }
+      function waReminderMessage(member, fundDef, fund) { return waMessageFor(member, fundDef.key); }
+      function waThanksMessage(member, fundDef) { return waMessageFor(member, fundDef.key); }
+      function waActionsFor(member) {
+        var actions = [];
+        [["kas", FUND_DEF.kas, member.kas], ["seminar", FUND_DEF.seminar, member.seminar]].forEach(function (triple) {
+          var fundDef = triple[1], fund = triple[2];
+          if (fund.status === "LUNAS") {
+            actions.push({ fundKey: triple[0], kind: "thanks", label: "Terima kasih " + fundDef.label, kindLabel: "Terima kasih", message: waThanksMessage(member, fundDef) });
+          } else {
+            actions.push({ fundKey: triple[0], kind: "reminder", label: "Pengingat " + fundDef.label, kindLabel: "Pengingat", message: waReminderMessage(member, fundDef, fund) });
+          }
+        });
+        return actions;
+      }
+      var waOverlay = document.getElementById("waOverlay");
+      var waCurrentActions = [];
+      var waCurrentMember = null;
+      var waSelected = 0;
+      function selectWaAction(i) {
+        waSelected = i;
+        var act = waCurrentActions[i];
+        if (!act) return;
+        document.querySelectorAll("#waOptions .wa-option").forEach(function (b, bi) { b.classList.toggle("active", bi === i); });
+        document.getElementById("waPreview").textContent = act.message;
+        document.getElementById("waOpen").href = waLink(waCurrentMember, act.message);
+      }
+      function openWaChooser(member) {
+        waCurrentMember = member;
+        waCurrentActions = waActionsFor(member);
+        document.getElementById("waTitle").textContent = member.name;
+        document.getElementById("waSub").textContent = "Kas Kelas: " + member.kas.status + " · Dana Seminar: " + member.seminar.status + (member.seminar.status === "KURANG" ? " (kurang " + rp((DB.seminar.target || FUND_DEF.seminar.iuran) - member.seminar.paid) + ")" : "") + ". Pilihan di bawah hanya yang sesuai status anggota ini.";
+        document.getElementById("waOptions").innerHTML = waCurrentActions.map(function (a, i) {
+          return '<button type="button" class="wa-option" data-wa-opt="' + i + '"><span>' + a.label + '</span><span class="wa-opt-kind">' + a.kindLabel + '</span></button>';
+        }).join("");
+        selectWaAction(0);
+        waOverlay.classList.add("open");
+      }
+      function closeWa() { waOverlay.classList.remove("open"); }
+      document.getElementById("memberList").addEventListener("click", function (e) {
+        var btn = e.target.closest("button[data-wa]");
+        if (!btn) return;
+        var m = MEMBERS[parseInt(btn.getAttribute("data-wa"), 10)];
+        if (m) openWaChooser(m);
+      });
+      document.getElementById("waOptions").addEventListener("click", function (e) {
+        var btn = e.target.closest("button[data-wa-opt]");
+        if (!btn) return;
+        selectWaAction(parseInt(btn.getAttribute("data-wa-opt"), 10));
+      });
+      document.getElementById("waClose").addEventListener("click", closeWa);
+      waOverlay.addEventListener("click", function (e) { if (e.target === waOverlay) closeWa(); });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeWa(); });
+
+      // ---------- render awal & boot Firebase ----------
+      computeDerived();
+      renderBeranda();
+      renderTx();
+      renderReport();
+      renderReportLists();
+      renderAnggota();
+
+      function bootKasboard() {
+        FB = window.FBX;
+        if (!FB || !FB.ready) {
+          authError("Firebase belum siap. Isi/periksa firebase-config.js dan koneksi internet, lalu muat ulang.");
+          return;
+        }
+        FB.onAuth(function (u) {
+          if (u) applySession(u); else clearSession();
+        });
+      }
+      if (window.FBX) bootKasboard();
+      else window.addEventListener("fbready", bootKasboard, { once: true });
+    </script>
+
+  </body>
+</html>
